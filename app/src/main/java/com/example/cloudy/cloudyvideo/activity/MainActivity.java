@@ -6,17 +6,18 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.Gravity;
 import android.widget.TextView;
+import com.example.cloudy.cloudyvideo.R;
 
 public class MainActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TextView textView = new TextView(this);
-        textView.setText("Hello");
-        textView.setTextSize(30);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(Color.BLUE);
-
-        setContentView(textView);
+//        TextView textView = new TextView(this);
+//        textView.setText("Hello");
+//        textView.setTextSize(30);
+//        textView.setGravity(Gravity.CENTER);
+//        textView.setTextColor(Color.BLUE);
+//        setContentView(textView);
+        setContentView(R.layout.activity_main);
     }
 }
