@@ -4,34 +4,37 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-    </FrameLayout>
-    <RadioGroup
-            android:background="#4444"
-            android:orientation="horizontal"
+            android:id="@+id/fl_main_content"
+            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <RadioButton
-                android:text="推荐"
-                android:textSize="10sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        <RadioButton
-                android:text="频道"
-                android:textSize="10sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        <RadioButton
-                android:text="搜索"
-                android:textSize="10sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        <RadioButton
-                android:text="我的"
-                android:textSize="10sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-    </RadioGroup>
+            android:layout_height="wrap_content" />
+        <RadioGroup
+                android:id="@+id/rg_buttom_tag"
+                android:padding="3dp"
+                android:gravity="center_horizontal"
+                android:background="#11000000"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <RadioButton
+                    android:text="推荐"
+                    android:id="@+id/rb_recommend"
+                    android:drawableTop="@drawable/rb_recommend_drawable_selector"
+                    style="@style/bottom_style"/>
+            <RadioButton
+                    android:text="频道"
+                    android:id="@+id/rb_channel"
+                    android:drawableTop="@drawable/rb_channel_drawable_selector"
+                    style="@style/bottom_style"/>
+            <RadioButton
+                    android:text="搜索"
+                    android:id="@+id/rb_search"
+                    android:drawableTop="@drawable/rb_search_drawable_selector"
+                    style="@style/bottom_style"/>
+            <RadioButton
+                    android:text="我的"
+                    android:id="@+id/rb_mine"
+                    android:drawableTop="@drawable/rb_mine_drawable_selector"
+                    style="@style/bottom_style"/>
+        </RadioGroup>
 </LinearLayout>
