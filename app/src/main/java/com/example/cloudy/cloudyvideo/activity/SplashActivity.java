@@ -26,14 +26,19 @@ public class SplashActivity extends Activity {
             }
         },2000);
     }
+    private boolean isStartMain = false;
     /*
      跳转到主页面并关闭当前页面
     */
-    private void startMainActivity(){
-        Intent intent = new Intent(this,MainActivity.class);
-        startActivity(intent);
-        //关闭当前页面
-        finish();
+    private void startMainActivity() {
+        //AndroidManifest.xml 文件里面不使用单例模式，就在这里判断
+        if(!isStartMain){
+            isStartMain = true;
+            Intent intent = new Intent(this,MainActivity.class);
+            startActivity(intent);
+            //关闭当前页面
+            finish();
+        }
     }
 
     @Override
@@ -42,9 +47,10 @@ public class SplashActivity extends Activity {
         startMainActivity();
         return super.onTouchEvent(event);
     }
-    //修复刚打开立马退出，会再次进入主界面的Bug
+
     @Override
     protected void onDestroy() {
+        //修复刚打开立马退出，会再次进入主界面的Bug
         hander.removeCallbacksAndMessages(null);
         super.onDestroy();
     }

@@ -26,7 +26,7 @@ public class MinePager extends BasePager{
     @Override
     public void initData() {
         super.initData();
-        LogUtil.e("Data加载");
+        LogUtil.e("我的数据加载");
         textView.setText("我的");
     }
 }

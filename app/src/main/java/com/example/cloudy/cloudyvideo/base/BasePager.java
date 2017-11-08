@@ -4,19 +4,35 @@ import android.content.Context;
 import android.view.View;
 
 public abstract class BasePager {
-    public  final Context context;
+
+    /**
+     * 上下文
+     */
+    public final Context context;
+    /**
+     * 接收各个页面的实例
+     */
     public View rootView;
-    public BasePager(Context context){
+    public boolean isInitData;
+
+    public BasePager(Context context) {
         this.context = context;
         rootView = initView();
     }
+
     /**
-     * 视图
+     * 强制子页面实现该方法，实现想要的特定的效果
+     *
      * @return
      */
     public abstract View initView();
+
+
     /**
-     * 数据
+     * 当子页面，需要绑定数据，或者联网请求数据并且绑定的时候，重写该方法
      */
-    public void initData(){}
+    public void initData(){
+
+    }
 }
+

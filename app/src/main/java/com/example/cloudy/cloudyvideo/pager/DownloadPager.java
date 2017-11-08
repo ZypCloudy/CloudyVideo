@@ -8,9 +8,9 @@ import android.widget.TextView;
 import com.example.cloudy.cloudyvideo.base.BasePager;
 import com.example.cloudy.cloudyvideo.utils.LogUtil;
 
-public class SearchPager extends BasePager{
+public class DownloadPager extends BasePager{
     private TextView textView;
-    public SearchPager(Context context) {
+    public DownloadPager(Context context) {
         super(context);
     }
 
@@ -26,7 +26,7 @@ public class SearchPager extends BasePager{
     @Override
     public void initData() {
         super.initData();
-        LogUtil.e("Data加载");
-        textView.setText("搜索");
+        LogUtil.e("下载的数据");
+        textView.setText("下载");
     }
 }
