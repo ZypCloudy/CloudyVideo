@@ -9,12 +9,14 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.*;
 import com.example.cloudy.cloudyvideo.R;
+import com.example.cloudy.cloudyvideo.activity.SystemVideoPlayer;
 import com.example.cloudy.cloudyvideo.adapter.VideoPagerAdapter;
 import com.example.cloudy.cloudyvideo.base.BasePager;
 import com.example.cloudy.cloudyvideo.domain.MediaItem;
@@ -49,8 +51,8 @@ public class DownloadPager extends BasePager {
             if(mediaItems != null && mediaItems.size() >0){
                 //有数据
                 //设置适配器
-//                videoPagerAdapter = new VideoPagerAdapter(context,mediaItems,false);
-//                listview.setAdapter(videoPagerAdapter);
+                videoPagerAdapter = new VideoPagerAdapter(context,mediaItems);
+                listview.setAdapter(videoPagerAdapter);
                 //把文本隐藏
                 tv_nomedia.setVisibility(View.GONE);
             }else{
@@ -84,10 +86,25 @@ public class DownloadPager extends BasePager {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            //3.传递列表数据-对象-序列化
-//            Intent intent = new Intent(context,AudioPlayerActivity.class);
-//            intent.putExtra("position",position);
+            MediaItem mediaItem = mediaItems.get(position);
+//            Toast.makeText(context, "mediaItem=="+mediaItem.toString(), Toast.LENGTH_SHORT).show();
+
+            //1.调起系统所有的播放-隐式意图
+//            Intent intent = new Intent();
+//            intent.setDataAndType(Uri.parse(mediaItem.getData()),"video/*");
 //            context.startActivity(intent);
+
+            //2.调用自己写的播放器-显示意图--一个播放地址
+//            Intent intent = new Intent(context,SystemVideoPlayer.class);
+//            intent.setDataAndType(Uri.parse(mediaItem.getData()),"video/*");
+//            context.startActivity(intent);
+            //3.传递列表数据-对象-序列化
+            Intent intent = new Intent(context,SystemVideoPlayer.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("videolist",mediaItems);
+            intent.putExtras(bundle);
+            intent.putExtra("position",position);
+            context.startActivity(intent);
 
         }
     }
@@ -99,6 +116,7 @@ public class DownloadPager extends BasePager {
         //加载本地视频数据
         getDataFromLocal();
     }
+
     /**
      * 从本地的sdcard得到数据
      * //1.遍历sdcard,后缀名
@@ -111,17 +129,19 @@ public class DownloadPager extends BasePager {
             @Override
             public void run() {
                 super.run();
-//                isGrantExternalRW((Activity) context);
+
+                isGrantExternalRW((Activity) context);
 //                SystemClock.sleep(2000);
                 mediaItems = new ArrayList<>();
                 ContentResolver resolver = context.getContentResolver();
-                Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 String[] objs = {
-                        MediaStore.Audio.Media.DISPLAY_NAME,//视频文件在sdcard的名称
-                        MediaStore.Audio.Media.DURATION,//视频总时长
-                        MediaStore.Audio.Media.SIZE,//视频的文件大小
-                        MediaStore.Audio.Media.DATA,//视频的绝对地址
-                        MediaStore.Audio.Media.ARTIST,//歌曲的演唱者
+                        MediaStore.Video.Media.DISPLAY_NAME,//视频文件在sdcard的名称
+                        MediaStore.Video.Media.DURATION,//视频总时长
+                        MediaStore.Video.Media.SIZE,//视频的文件大小
+                        MediaStore.Video.Media.DATA,//视频的绝对地址
+                        MediaStore.Video.Media.ARTIST,//歌曲的演唱者
+
                 };
                 Cursor cursor = resolver.query(uri, objs, null, null, null);
                 if(cursor != null){
@@ -152,8 +172,8 @@ public class DownloadPager extends BasePager {
                 handler.sendEmptyMessage(10);
             }
         }.start();
-
     }
+
     /**
      * 解决安卓6.0以上版本不能读取外部存储权限的问题
      * @param activity

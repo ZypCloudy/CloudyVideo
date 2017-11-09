@@ -13,9 +13,9 @@ import com.example.cloudy.cloudyvideo.utils.Utils;
 
 import java.util.ArrayList;
 
-public class VideoPagerAdapter extends BaseAdapter{
+public class VideoPagerAdapter extends BaseAdapter {
 
-    private Context context;
+    private  Context context;
     private final ArrayList<MediaItem> mediaItems;
     private Utils utils;
 
@@ -50,23 +50,17 @@ public class VideoPagerAdapter extends BaseAdapter{
             viewHoder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             viewHoder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
             viewHoder.tv_size = (TextView) convertView.findViewById(R.id.tv_size);
-
             convertView.setTag(viewHoder);
         }else{
             viewHoder = (ViewHoder) convertView.getTag();
         }
-
         //根据position得到列表中对应位置的数据
         MediaItem mediaItem = mediaItems.get(position);
         viewHoder.tv_name.setText(mediaItem.getName());
         viewHoder.tv_size.setText(Formatter.formatFileSize(context, mediaItem.getSize()));
         viewHoder.tv_time.setText(utils.stringForTime((int) mediaItem.getDuration()));
-
-
         return convertView;
     }
-
-
     static class ViewHoder{
         ImageView iv_icon;
         TextView tv_name;
