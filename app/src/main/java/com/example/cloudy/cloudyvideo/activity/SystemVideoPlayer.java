@@ -278,7 +278,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     private void setButtonState() {
         if(mediaItems != null && mediaItems.size() >0){
             if(mediaItems.size()==1){
-               setEnable(false);
+                setEnable(false);
             }else if(mediaItems.size()==2) {
                 if(position==0){
                     btnVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);

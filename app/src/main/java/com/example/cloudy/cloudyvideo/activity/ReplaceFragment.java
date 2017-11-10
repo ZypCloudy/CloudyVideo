@@ -10,6 +10,10 @@ import com.example.cloudy.cloudyvideo.base.BasePager;
 public class ReplaceFragment extends Fragment {
     private BasePager currPager;
 
+    public ReplaceFragment(){
+
+    }
+
     public ReplaceFragment(BasePager pager) {
         this.currPager = pager;
     }

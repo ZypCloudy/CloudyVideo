@@ -18,8 +18,17 @@
             </intent-filter>
         </activity>
         <!--使用单例模式-->
+        <!--<activity android:name=".activity.MainActivity"-->
+                  <!--android:launchMode="singleTask"-->
+        <!--/>-->
+
         <activity android:name=".activity.MainActivity"
-                  android:launchMode="singleTask"
+                  android:configChanges="keyboardHidden|screenSize|orientation"/>
+
+        <activity android:name=".activity.SystemVideoPlayer"
+                  android:screenOrientation="landscape"
+                  android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+                  android:configChanges="keyboardHidden|screenSize|orientation"
         />
     </application>
 
