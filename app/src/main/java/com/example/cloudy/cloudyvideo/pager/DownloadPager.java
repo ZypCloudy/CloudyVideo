@@ -90,14 +90,14 @@ public class DownloadPager extends BasePager {
 //            Toast.makeText(context, "mediaItem=="+mediaItem.toString(), Toast.LENGTH_SHORT).show();
 
             //1.调起系统所有的播放-隐式意图
-            Intent intent = new Intent();
-            intent.setDataAndType(Uri.parse(mediaItem.getData()),"video/*");
-            context.startActivity(intent);
-
-            //2.调用自己写的播放器-显示意图--一个播放地址
-//            Intent intent = new Intent(context,SystemVideoPlayer.class);
+//            Intent intent = new Intent();
 //            intent.setDataAndType(Uri.parse(mediaItem.getData()),"video/*");
 //            context.startActivity(intent);
+
+            //2.调用自己写的播放器-显示意图--一个播放地址
+            Intent intent = new Intent(context,SystemVideoPlayer.class);
+            intent.setDataAndType(Uri.parse(mediaItem.getData()),"video/*");
+            context.startActivity(intent);
             //3.传递列表数据-对象-序列化
 //            Intent intent = new Intent(context,SystemVideoPlayer.class);
 //            Bundle bundle = new Bundle();
@@ -168,6 +168,7 @@ public class DownloadPager extends BasePager {
                     }
                     cursor.close();
                 }
+                LogUtil.e("视频数量：" + mediaItems.size());
                 //Handler发消息
                 handler.sendEmptyMessage(10);
             }

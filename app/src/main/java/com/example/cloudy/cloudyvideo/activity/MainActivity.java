@@ -1,9 +1,14 @@
 package com.example.cloudy.cloudyvideo.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import com.example.cloudy.cloudyvideo.R;
 import com.example.cloudy.cloudyvideo.base.BasePager;
@@ -77,7 +82,7 @@ public class MainActivity extends FragmentActivity {
         //2.开启事务
         FragmentTransaction ft = manager.beginTransaction();
         //3.替换
-//        Fragment fragment = new Fragment(){
+//        ft.replace(R.id.fl_main_content,new Fragment(){
 //            @Nullable
 //            @Override
 //            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,7 +93,7 @@ public class MainActivity extends FragmentActivity {
 //                }
 //                return null;
 //            }
-//        };
+//        });
         ft.replace(R.id.fl_main_content,new ReplaceFragment(getBasePager()));
         //4.提交事务
         ft.commit();

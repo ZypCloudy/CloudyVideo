@@ -1,5 +1,6 @@
 package com.example.cloudy.cloudyvideo.activity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,13 +15,9 @@ public class ReplaceFragment extends Fragment {
 
     }
 
+    @SuppressLint("ValidFragment")
     public ReplaceFragment(BasePager pager) {
         this.currPager = pager;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
