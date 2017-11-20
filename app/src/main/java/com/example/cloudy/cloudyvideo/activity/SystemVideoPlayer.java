@@ -17,6 +17,9 @@ import com.example.cloudy.cloudyvideo.R;
 import com.example.cloudy.cloudyvideo.utils.LogUtil;
 import com.example.cloudy.cloudyvideo.utils.Utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class SystemVideoPlayer extends Activity implements View.OnClickListener {
     private static final int PROGRESS = 1;
     private VideoView videoView;
@@ -34,6 +37,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     private Button btnVideoSiwchScreen;
     private Uri uri;
     private Utils utils;
+    private TextView tvSystemTime;
     /**
      * 监听电量的广播
      */
@@ -101,6 +105,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         llTop = (LinearLayout)findViewById( R.id.ll_top );
         tvName = (TextView)findViewById( R.id.tv_name );
         ivBattery = (ImageView)findViewById( R.id.iv_battery );
+        tvSystemTime = (TextView)findViewById( R.id.tv_system_time );
         llBottom = (LinearLayout)findViewById( R.id.ll_bottom );
         tvCurrentTime = (TextView)findViewById( R.id.tv_current_time );
         seekbarVideo = (SeekBar)findViewById( R.id.seekbar_video );
@@ -153,6 +158,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         //设置SeeKbar状态变化的监听
         seekbarVideo.setOnSeekBarChangeListener(new VideoOnSeekBarChangeListener());
     }
+
+    
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -165,6 +172,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
                     seekbarVideo.setProgress(currentPosition);
                     //更新文本播放进度
                     tvCurrentTime.setText(utils.stringForTime(currentPosition));
+                    //设置系统时间
+                    tvSystemTime.setText(getSysteTime());
                     //3.每秒更新一次
                     handler.removeMessages(PROGRESS);
                     handler.sendEmptyMessageDelayed(PROGRESS, 1000);
@@ -172,6 +181,17 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             }
         }
     };
+
+    /**
+     * 得到系统时间
+     * @return
+     */
+    private String getSysteTime() {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        return format.format(new Date());
+    }
+
+
     class MyOnPreparedListener implements MediaPlayer.OnPreparedListener {
 
         //当底层解码准备好的时候
