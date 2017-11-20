@@ -20,17 +20,11 @@
         <!--使用单例模式-->
         <activity android:name=".activity.MainActivity"
                   android:launchMode="singleTask"
+                  android:configChanges="keyboardHidden|screenSize|orientation"
         />
-        <activity android:name=".activity.SystemVideoPlayer"/>
-
-        <!--<activity android:name=".activity.MainActivity"-->
-                  <!--android:configChanges="keyboardHidden|screenSize|orientation"/>-->
-
-        <!--<activity android:name=".activity.SystemVideoPlayer"-->
-                  <!--android:screenOrientation="landscape"-->
-                  <!--android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"-->
-                  <!--android:configChanges="keyboardHidden|screenSize|orientation"-->
-        <!--/>-->
+        <!--横竖屏切换导致生命周期重新执行-->
+        <activity android:name=".activity.SystemVideoPlayer"
+                  android:configChanges="keyboardHidden|screenSize|orientation"/>
     </application>
 
 </manifest>
