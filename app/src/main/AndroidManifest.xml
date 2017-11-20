@@ -24,6 +24,7 @@
         />
         <!--横竖屏切换导致生命周期重新执行-->
         <activity android:name=".activity.SystemVideoPlayer"
+                  android:screenOrientation="landscape"
                   android:configChanges="keyboardHidden|screenSize|orientation"/>
     </application>
 
