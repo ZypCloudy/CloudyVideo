@@ -12,7 +12,7 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_player_status"
+                android:background="#e0000000"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -42,41 +42,6 @@
                     android:textColor="#ffffff" />
         </LinearLayout>
 
-
-        <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@drawable/bg_player_top_control"-->
-                <!--android:gravity="center_vertical"-->
-                <!--android:orientation="horizontal">-->
-
-            <!--<Button-->
-                    <!--android:id="@+id/btn_voice"-->
-
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:background="@drawable/btn_voice_selector" />-->
-
-            <!--<SeekBar-->
-                    <!--android:id="@+id/seekbar_voice"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:maxHeight="6dp"-->
-                    <!--android:minHeight="6dp"-->
-                    <!--android:progress="20"-->
-                    <!--android:progressDrawable="@drawable/progress_horizontal"-->
-                    <!--android:thumb="@drawable/progress_thumb" />-->
-
-            <!--<Button-->
-                    <!--android:id="@+id/btn_swich_player"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:background="@drawable/btn_swich_player_selector" />-->
-
-        <!--</LinearLayout>-->
-
-
     </LinearLayout>
 
 
@@ -91,7 +56,7 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_player_bottom_seekbar"
+                android:background="#e0000000"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -170,9 +135,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/btn_video_siwch_screen_full_selector" />
 
-
         </LinearLayout>
-
 
     </LinearLayout>
 
