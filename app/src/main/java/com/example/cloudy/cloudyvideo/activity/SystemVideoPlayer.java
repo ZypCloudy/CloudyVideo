@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PersistableBundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 import com.example.cloudy.cloudyvideo.R;
@@ -48,6 +50,9 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     private ArrayList<MediaItem> mediaItems;
     private int position;
 
+    //1.设置手势
+    private GestureDetector detector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +62,40 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         findViews();
         setListener();
         setData();
+
+        //设置手势
+        gesture();
         //设置控制面板
 //        videoView.setMediaController(new MediaController(this));
+    }
+
+    private void gesture() {
+        //2.实例化手势识别器，并且重写双击，点击，长按
+        detector  = new GestureDetector(this,new GestureDetector.SimpleOnGestureListener(){
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                Toast.makeText(SystemVideoPlayer.this, "我被双击了", Toast.LENGTH_SHORT).show();
+                startAndPause();
+                return super.onDoubleTap(e);
+            }
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                Toast.makeText(SystemVideoPlayer.this, "我被单击了", Toast.LENGTH_SHORT).show();
+                return super.onSingleTapConfirmed(e);
+            }
+        });
+    }
+
+    private void startAndPause() {
+        if(videoView.isPlaying()){
+            videoView.pause();
+            btnVideoStartPause.setBackgroundResource(R.drawable.btn_video_start_selector);
+        }else {
+            videoView.start();
+            btnVideoStartPause.setBackgroundResource(R.drawable.btn_video_pause_selector);
+        }
     }
 
     private void setData() {
@@ -158,13 +195,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             playPreVideo();
         } else if ( v == btnVideoStartPause ) {
             // Handle clicks for btnVideoStartPause
-            if(videoView.isPlaying()){
-                videoView.pause();
-                btnVideoStartPause.setBackgroundResource(R.drawable.btn_video_start_selector);
-            }else {
-                videoView.start();
-                btnVideoStartPause.setBackgroundResource(R.drawable.btn_video_pause_selector);
-            }
+            startAndPause();
         } else if ( v == btnVideoNext ) {
             // Handle clicks for btnVideoNext
             playNextVideo();
@@ -340,7 +371,9 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
         @Override
         public void onCompletion(MediaPlayer mp) {
-            Toast.makeText(SystemVideoPlayer.this, "播放完成了="+uri, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(SystemVideoPlayer.this, "播放完成了="+uri, Toast.LENGTH_SHORT).show();
+            //播放完成自动播放下一个
+            playNextVideo();
         }
     }
     class VideoOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
@@ -385,5 +418,10 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         LogUtil.e("onDestroy--");
         super.onDestroy();//释放父类
     }
-
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //3.把事件传递给手势识别器
+        detector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
 }
