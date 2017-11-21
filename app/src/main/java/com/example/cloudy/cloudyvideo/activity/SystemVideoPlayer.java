@@ -39,6 +39,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     private Button btnVideoStartPause;
     private Button btnVideoNext;
     private Button btnVideoSiwchScreen;
+    private RelativeLayout media_controller;
     private Uri uri;
     private Utils utils;
     private TextView tvSystemTime;
@@ -52,6 +53,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
     //1.设置手势
     private GestureDetector detector;
+
+    private boolean isshowMediaController = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,14 +78,26 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                Toast.makeText(SystemVideoPlayer.this, "我被双击了", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SystemVideoPlayer.this, "我被双击了", Toast.LENGTH_SHORT).show();
                 startAndPause();
                 return super.onDoubleTap(e);
             }
 
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                Toast.makeText(SystemVideoPlayer.this, "我被单击了", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SystemVideoPlayer.this, "我被单击了", Toast.LENGTH_SHORT).show();
+                if(isshowMediaController){
+                    //隐藏
+                    hideMediaController();
+                    //把隐藏消息移除
+//                    handler.removeMessages(HIDE_MEDIACONTROLLER);
+
+                }else{
+                    //显示
+                    showMediaController();
+                    //发消息隐藏
+//                    handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER,4000);
+                }
                 return super.onSingleTapConfirmed(e);
             }
         });
@@ -96,6 +111,20 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             videoView.start();
             btnVideoStartPause.setBackgroundResource(R.drawable.btn_video_pause_selector);
         }
+    }
+    /**
+     * 显示控制面板
+     */
+    private void showMediaController(){
+        media_controller.setVisibility(View.VISIBLE);
+        isshowMediaController = true;
+    }
+    /**
+     * 隐藏控制面板
+     */
+    private void hideMediaController(){
+        media_controller.setVisibility(View.GONE);
+        isshowMediaController = false;
     }
 
     private void setData() {
@@ -177,6 +206,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         btnVideoStartPause = (Button)findViewById( R.id.btn_video_start_pause );
         btnVideoNext = (Button)findViewById( R.id.btn_video_next );
         btnVideoSiwchScreen = (Button)findViewById( R.id.btn_video_siwch_screen );
+        media_controller = (RelativeLayout) findViewById(R.id.media_controller);
 
         btnExit.setOnClickListener(this);
         btnVideoPre.setOnClickListener(this);
