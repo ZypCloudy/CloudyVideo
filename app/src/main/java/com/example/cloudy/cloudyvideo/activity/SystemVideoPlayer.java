@@ -14,10 +14,12 @@ import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.*;
 import com.example.cloudy.cloudyvideo.R;
+import com.example.cloudy.cloudyvideo.domain.MediaItem;
 import com.example.cloudy.cloudyvideo.utils.LogUtil;
 import com.example.cloudy.cloudyvideo.utils.Utils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class SystemVideoPlayer extends Activity implements View.OnClickListener {
@@ -42,22 +44,45 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
      * 监听电量的广播
      */
     private MyReceiver myReceiver;
+
+    private ArrayList<MediaItem> mediaItems;
+    private int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         utils = new Utils();
+        getData();
         initData();
         findViews();
         setListener();
-        //得到播放地址
-        uri = getIntent().getData();
-        if(uri != null){
-            videoView.setVideoURI(uri);
-        }
+        setData();
         //设置控制面板
 //        videoView.setMediaController(new MediaController(this));
     }
 
+    private void setData() {
+        if(mediaItems != null &&mediaItems .size() >0){
+            MediaItem mediaItem = mediaItems.get(position);
+            tvName.setText(mediaItem.getName());//设置视频的名称
+            videoView.setVideoPath(mediaItem.getData());
+
+        }else if(uri !=null){
+            tvName.setText(uri.toString());//设置视频的名称
+            videoView.setVideoURI(uri);
+        }else{
+            Toast.makeText(SystemVideoPlayer.this, "没有传递数据", Toast.LENGTH_SHORT).show();
+        }
+        //设置按钮状态
+        setButtonState();
+    }
+
+    private void getData(){
+        //得到播放地址
+        uri = getIntent().getData();
+        mediaItems = (ArrayList<MediaItem>) getIntent().getSerializableExtra("videolist");
+        position = getIntent().getIntExtra("position",0);
+    }
     private void initData() {
         myReceiver = new MyReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -127,8 +152,10 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     public void onClick(View v) {
         if ( v == btnExit ) {
             // Handle clicks for btnExit
+            finish();
         } else if ( v == btnVideoPre ) {
             // Handle clicks for btnVideoPre
+            playPreVideo();
         } else if ( v == btnVideoStartPause ) {
             // Handle clicks for btnVideoStartPause
             if(videoView.isPlaying()){
@@ -140,11 +167,104 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             }
         } else if ( v == btnVideoNext ) {
             // Handle clicks for btnVideoNext
+            playNextVideo();
         } else if ( v == btnVideoSiwchScreen ) {
             // Handle clicks for btnVideoSiwchScreen
         }
     }
+    /**
+     * 播放上一个视频
+     */
+    private void playPreVideo() {
+        if(mediaItems != null && mediaItems.size()>0){
+            //播放上一个视频
+            position--;
+            if(position >= 0){
 
+                MediaItem mediaItem = mediaItems.get(position);
+                tvName.setText(mediaItem.getName());
+                videoView.setVideoPath(mediaItem.getData());
+
+                //设置按钮状态
+                setButtonState();
+            }
+        }else if(uri != null){
+            //设置按钮状态-上一个和下一个按钮设置灰色并且不可以点击
+            setButtonState();
+        }
+    }
+
+    /**
+     * 播放下一个视频
+     */
+    private void playNextVideo() {
+        if(mediaItems != null && mediaItems.size()>0){
+            //播放下一个
+            position++;
+            if(position < mediaItems.size()){
+
+                MediaItem mediaItem = mediaItems.get(position);
+                tvName.setText(mediaItem.getName());
+                videoView.setVideoPath(mediaItem.getData());
+                //设置按钮状态
+                setButtonState();
+            }
+        }else if(uri != null){
+            //设置按钮状态-上一个和下一个按钮设置灰色并且不可以点击
+            setButtonState();
+        }
+    }
+    private void setButtonState() {
+        if(mediaItems != null && mediaItems.size() >0){
+            if(mediaItems.size()==1){
+                setEnable(false);
+            }else if(mediaItems.size()==2) {
+                if(position==0){
+                    btnVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+                    btnVideoPre.setEnabled(false);
+
+                    btnVideoNext.setBackgroundResource(R.drawable.btn_video_next_selector);
+                    btnVideoNext.setEnabled(true);
+
+                }else if(position==mediaItems.size()-1){
+                    btnVideoNext.setBackgroundResource(R.drawable.btn_next_gray);
+                    btnVideoNext.setEnabled(false);
+
+                    btnVideoPre.setBackgroundResource(R.drawable.btn_video_pre_selector);
+                    btnVideoPre.setEnabled(true);
+
+                }
+            }else{
+                if(position==0){
+                    btnVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+                    btnVideoPre.setEnabled(false);
+                }else if(position==mediaItems.size()-1){
+                    btnVideoNext.setBackgroundResource(R.drawable.btn_next_gray);
+                    btnVideoNext.setEnabled(false);
+                }else{
+                    setEnable(true);
+                }
+            }
+        }else if(uri != null){
+            //两个按钮设置灰色
+            setEnable(false);
+        }
+    }
+    private void setEnable(boolean isEnable) {
+        if(isEnable){
+            btnVideoPre.setBackgroundResource(R.drawable.btn_video_pre_selector);
+            btnVideoPre.setEnabled(true);
+            btnVideoNext.setBackgroundResource(R.drawable.btn_video_next_selector);
+            btnVideoNext.setEnabled(true);
+        }else{
+            //两个按钮设置灰色
+            btnVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+            btnVideoPre.setEnabled(false);
+            btnVideoNext.setBackgroundResource(R.drawable.btn_next_gray);
+            btnVideoNext.setEnabled(false);
+        }
+
+    }
     private void setListener() {
         //准备好的监听
         videoView.setOnPreparedListener(new MyOnPreparedListener());

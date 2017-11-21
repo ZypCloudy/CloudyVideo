@@ -1,6 +1,8 @@
 package com.example.cloudy.cloudyvideo.domain;
 
-public class MediaItem {
+import java.io.Serializable;
+
+public class MediaItem implements Serializable{
     private String name;
 
     private long duration;
