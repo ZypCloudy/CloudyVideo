@@ -26,6 +26,7 @@ import java.util.Date;
 
 public class SystemVideoPlayer extends Activity implements View.OnClickListener {
     private static final int PROGRESS = 1;
+    private static final int HIDE_MEDIACONTROLLER = 2;
     private VideoView videoView;
     private LinearLayout llTop;
     private TextView tvName;
@@ -90,13 +91,13 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
                     //隐藏
                     hideMediaController();
                     //把隐藏消息移除
-//                    handler.removeMessages(HIDE_MEDIACONTROLLER);
+                    handler.removeMessages(HIDE_MEDIACONTROLLER);
 
                 }else{
                     //显示
                     showMediaController();
                     //发消息隐藏
-//                    handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER,4000);
+                    handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER,4000);
                 }
                 return super.onSingleTapConfirmed(e);
             }
@@ -185,11 +186,6 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         }
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-    }
-
     private void findViews() {
         setContentView(R.layout.system_video_player);
         videoView = (VideoView) findViewById(R.id.videoview);
@@ -232,6 +228,9 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         } else if ( v == btnVideoSiwchScreen ) {
             // Handle clicks for btnVideoSiwchScreen
         }
+
+        handler.removeMessages(HIDE_MEDIACONTROLLER);
+        handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER,4000);
     }
     /**
      * 播放上一个视频
@@ -346,6 +345,9 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
+                case HIDE_MEDIACONTROLLER://隐藏控制面板
+                    hideMediaController();
+                    break;
                 case PROGRESS:
                     //1.得到当前的视频播放进度
                     int currentPosition = videoView.getCurrentPosition();
@@ -383,6 +385,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             int duration =  videoView.getDuration();
             seekbarVideo.setMax(duration);
             tvDuration.setText(utils.stringForTime(duration));
+
+            hideMediaController();
             //2.发消息
             handler.sendEmptyMessage(PROGRESS);
         }
@@ -425,7 +429,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
          */
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-
+            handler.removeMessages(HIDE_MEDIACONTROLLER);
         }
 
         /**
@@ -434,7 +438,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
          */
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-
+            handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER,4000);
         }
     }
 
