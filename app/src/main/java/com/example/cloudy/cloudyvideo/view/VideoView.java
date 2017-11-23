@@ -40,8 +40,7 @@ public class VideoView extends android.widget.VideoView {
     }
 
     /**
-     * 设置视频的宽和高 \n
-     * by 杨光福
+     * 设置视频的宽和高
      * @param videoWidth 指定视频的宽
      * @param videoHeight 指定视频的高
      */

@@ -11,14 +11,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PersistableBundle;
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+
 import android.widget.*;
 import com.example.cloudy.cloudyvideo.R;
 import com.example.cloudy.cloudyvideo.domain.MediaItem;
 import com.example.cloudy.cloudyvideo.utils.LogUtil;
 import com.example.cloudy.cloudyvideo.utils.Utils;
+import com.example.cloudy.cloudyvideo.view.VideoView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,6 +47,37 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     private Uri uri;
     private Utils utils;
     private TextView tvSystemTime;
+    /**
+     * 全屏
+     */
+    private static final int FULL_SCREEN = 1;
+    /**
+     * 默认屏幕
+     */
+    private static final int DEFAULT_SCREEN = 2;
+    /**
+     * 是否全屏
+     */
+    private boolean isFullScreen = false;
+
+    /**
+     * 屏幕的宽
+     */
+    private int screenWidth = 0;
+
+    /**
+     * 屏幕的高
+     */
+    private int screenHeight = 0;
+
+    /**
+     * 真实视频的宽
+     */
+    private int videoWidth;
+    /**
+     * 真实视频的高
+     */
+    private int videoHeight;
     /**
      * 监听电量的广播
      */
@@ -156,6 +190,17 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         //当电量变化的时候发这个广播
         intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
         registerReceiver(myReceiver, intentFilter);
+
+        //得到屏幕的宽和高
+        //过时的方式
+//        screenWidth = getWindowManager().getDefaultDisplay().getWidth();
+//        screenHeight = getWindowManager().getDefaultDisplay().getHeight();
+
+        //得到屏幕的宽和高最新方式
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
     }
     class MyReceiver extends BroadcastReceiver {
 
@@ -227,6 +272,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             playNextVideo();
         } else if ( v == btnVideoSiwchScreen ) {
             // Handle clicks for btnVideoSiwchScreen
+            setFullScreenAndDefault();
         }
 
         handler.removeMessages(HIDE_MEDIACONTROLLER);
@@ -380,6 +426,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         //当底层解码准备好的时候
         @Override
         public void onPrepared(MediaPlayer mp) {
+            videoWidth = mp.getVideoWidth();
+            videoHeight = mp.getVideoHeight();
             videoView.start();//开始播放
             //1.视频的总时长，关联总长度
             int duration =  videoView.getDuration();
@@ -389,6 +437,10 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             hideMediaController();
             //2.发消息
             handler.sendEmptyMessage(PROGRESS);
+
+//            videoView.setVideoSize(mp.getVideoWidth(),mp.getVideoHeight());
+            //屏幕的默认播放
+            setVideoType(DEFAULT_SCREEN);
         }
     }
 
@@ -457,5 +509,51 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         //3.把事件传递给手势识别器
         detector.onTouchEvent(event);
         return super.onTouchEvent(event);
+    }
+
+    private void setFullScreenAndDefault() {
+        if(isFullScreen){
+            //默认
+            setVideoType(DEFAULT_SCREEN);
+        }else{
+            //全屏
+            setVideoType(FULL_SCREEN);
+        }
+    }
+
+    private void setVideoType(int defaultScreen) {
+        switch (defaultScreen){
+            case FULL_SCREEN://全屏
+                //1.设置视频画面的大小-屏幕有多大就是多大
+                videoView.setVideoSize(screenWidth,screenHeight);
+                //2.设置按钮的状态-默认
+                btnVideoSiwchScreen.setBackgroundResource(R.drawable.btn_video_siwch_screen_default_selector);
+                isFullScreen = true;
+                break;
+            case DEFAULT_SCREEN://默认
+                //1.设置视频画面的大小
+                //视频真实的宽和高
+                int mVideoWidth = videoWidth;
+                int mVideoHeight = videoHeight;
+
+                //屏幕的宽和高
+                int width = screenWidth;
+                int height = screenHeight;
+
+                // for compatibility, we adjust size based on aspect ratio
+                if ( mVideoWidth * height  < width * mVideoHeight ) {
+                    //Log.i("@@@", "image too wide, correcting");
+                    width = height * mVideoWidth / mVideoHeight;
+                } else if ( mVideoWidth * height  > width * mVideoHeight ) {
+                    //Log.i("@@@", "image too tall, correcting");
+                    height = width * mVideoHeight / mVideoWidth;
+                }
+
+                videoView.setVideoSize(width,height);
+                //2.设置按钮的状态--全屏
+                btnVideoSiwchScreen.setBackgroundResource(R.drawable.btn_video_siwch_screen_full_selector);
+                isFullScreen = false;
+                break;
+        }
     }
 }
