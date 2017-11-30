@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.example.cloudy.cloudyvideo.R;
 import com.example.cloudy.cloudyvideo.base.BasePager;
 import com.example.cloudy.cloudyvideo.utils.LogUtil;
 

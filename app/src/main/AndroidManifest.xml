@@ -3,7 +3,8 @@
           package="com.example.cloudy.cloudyvideo">
     <!--添加读内存的权限-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    
+    <!--联网权限-->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -25,7 +26,39 @@
         <!--android:screenOrientation="landscape"-->//横屏
         <!--横竖屏切换导致生命周期重新执行-->
         <activity android:name=".activity.SystemVideoPlayer"
-                  android:configChanges="keyboardHidden|screenSize|orientation"/>
+                  android:label="@string/player_name"
+                  android:configChanges="keyboardHidden|screenSize|orientation"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="rtsp" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="video/*" />
+                <data android:mimeType="application/sdp" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:mimeType="video/mp4" />
+                <data android:mimeType="video/3gp" />
+                <data android:mimeType="video/3gpp" />
+                <data android:mimeType="video/3gpp2" />
+            </intent-filter>
+
+        </activity>
+
     </application>
 
 </manifest>
