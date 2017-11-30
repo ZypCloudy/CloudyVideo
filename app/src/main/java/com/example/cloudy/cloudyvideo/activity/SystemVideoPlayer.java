@@ -8,10 +8,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.PersistableBundle;
+import android.os.*;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -49,9 +46,19 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     private Button btnVoice;
     private SeekBar seekbarVoice;
     private Button btnSwichPlayer;
+    private LinearLayout ll_buffer;
+    private TextView tv_buffer_netspeed;
+    //上一次的播放进度
+    private int precurrentPosition;
+    private TextView tv_laoding_netspeed;
+    private LinearLayout ll_loading;
     private Uri uri;
     private Utils utils;
     private TextView tvSystemTime;
+    private boolean isshowMediaController = false;
+    //是否网络地址
+    private boolean isNetUri;
+    private boolean isUseSystem = false;
     /**
      * 全屏
      */
@@ -113,16 +120,14 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
      * 是否是静音
      */
     private boolean isMute = false;
+    //显示网速
+    private static final int SHOW_SPEED = 3;
 
     private ArrayList<MediaItem> mediaItems;
     private int position;
 
     //1.设置手势
     private GestureDetector detector;
-
-    private boolean isshowMediaController = false;
-    //是否网络地址
-    private boolean isNetUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,6 +296,10 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         btnVoice = (Button)findViewById( R.id.btn_voice );
         seekbarVoice = (SeekBar)findViewById( R.id.seekbar_voice );
         btnSwichPlayer = (Button)findViewById( R.id.btn_swich_player );
+        tv_buffer_netspeed = (TextView) findViewById(R.id.tv_buffer_netspeed);
+        tv_laoding_netspeed = (TextView) findViewById(R.id.tv_laoding_netspeed);
+        ll_buffer = (LinearLayout) findViewById(R.id.ll_buffer);
+        ll_loading = (LinearLayout) findViewById(R.id.ll_loading);
 
         btnVoice.setOnClickListener( this );
         btnSwichPlayer.setOnClickListener( this );
@@ -303,6 +312,9 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         seekbarVoice.setMax(maxVoice);
         //设置当前进度-当前音量
         seekbarVoice.setProgress(currentVoice);
+        //开始更新网络速度
+        handler.sendEmptyMessage(SHOW_SPEED);
+
     }
 
     @Override
@@ -340,10 +352,12 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             //播放上一个视频
             position--;
             if(position >= 0){
-
                 MediaItem mediaItem = mediaItems.get(position);
                 tvName.setText(mediaItem.getName());
                 isNetUri = utils.isNetUri(mediaItem.getData());
+                if(!isNetUri){
+                    ll_loading.setVisibility(View.GONE);
+                }
                 videoView.setVideoPath(mediaItem.getData());
 
                 //设置按钮状态
@@ -363,10 +377,12 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             //播放下一个
             position++;
             if(position < mediaItems.size()){
-
                 MediaItem mediaItem = mediaItems.get(position);
                 tvName.setText(mediaItem.getName());
                 isNetUri = utils.isNetUri(mediaItem.getData());
+                if(!isNetUri){
+                    ll_loading.setVisibility(View.GONE);
+                }
                 videoView.setVideoPath(mediaItem.getData());
                 //设置按钮状态
                 setButtonState();
@@ -441,14 +457,54 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         seekbarVideo.setOnSeekBarChangeListener(new VideoOnSeekBarChangeListener());
         //设置音量监听
         seekbarVoice.setOnSeekBarChangeListener(new VoiceOnSeekBarChangeListener());
+
+        //如果是网络视频，则设置网络卡
+        if(isNetUri){
+            //网络慢，视频卡：使用系统的监听卡，比如播放的文件不是一整个MP4，而是一段段的
+            if (isUseSystem) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    videoView.setOnInfoListener(new MyOnInfoListener());
+                }
+            }
+        }
+    }
+    class MyOnInfoListener implements MediaPlayer.OnInfoListener {
+
+        @Override
+        public boolean onInfo(MediaPlayer mp, int what, int extra) {
+            switch (what) {
+                case MediaPlayer.MEDIA_INFO_BUFFERING_START://视频卡了，拖动卡
+//                    Toast.makeText(SystemVideoPlayer.this, "卡了", Toast.LENGTH_SHORT).show();
+                    ll_buffer.setVisibility(View.VISIBLE);
+                    break;
+
+                case MediaPlayer.MEDIA_INFO_BUFFERING_END://视频卡结束了，拖动卡结束了
+//                    Toast.makeText(SystemVideoPlayer.this, "卡结束了", Toast.LENGTH_SHORT).show();
+                    ll_buffer.setVisibility(View.GONE);
+                    break;
+            }
+            return true;
+        }
     }
 
-    
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
+                case SHOW_SPEED://显示网速
+                    //1.得到网络速度
+                    String netSpeed = utils.getNetSpeed(SystemVideoPlayer.this);
+
+                    //显示网络速
+                    tv_laoding_netspeed.setText("玩命加载中..."+ netSpeed);
+                    tv_buffer_netspeed.setText("缓存中..." + netSpeed);
+
+                    //2.每两秒更新一次
+                    handler.removeMessages(SHOW_SPEED);
+                    handler.sendEmptyMessageDelayed(SHOW_SPEED, 2000);
+
+                    break;
                 case HIDE_MEDIACONTROLLER://隐藏控制面板
                     hideMediaController();
                     break;
@@ -471,6 +527,27 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
                     }else {
                         seekbarVideo.setSecondaryProgress(0);
                     }
+                    //如果是网络视频则监听
+                    if(isNetUri){
+                        //监听卡-能获得当前播放进度的情况使用：一整个MP4文件
+                        if (!isUseSystem && videoView.isPlaying()) {
+
+                            if(videoView.isPlaying()){
+                                int buffer = currentPosition - precurrentPosition;
+                                if (buffer < 500) {
+                                    //视频卡了
+                                    ll_buffer.setVisibility(View.VISIBLE);
+                                } else {
+                                    //视频不卡了
+                                    ll_buffer.setVisibility(View.GONE);
+                                }
+                            }else{
+                                ll_buffer.setVisibility(View.GONE);
+                            }
+                        }
+                        precurrentPosition = currentPosition;
+                    }
+
                     //3.每秒更新一次
                     handler.removeMessages(PROGRESS);
                     handler.sendEmptyMessageDelayed(PROGRESS, 1000);
@@ -609,6 +686,17 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 //            videoView.setVideoSize(mp.getVideoWidth(),mp.getVideoHeight());
             //屏幕的默认播放
             setVideoType(DEFAULT_SCREEN);
+
+            //把加载页面消失掉
+            ll_loading.setVisibility(View.GONE);
+
+//            mp.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+//                @Override
+//                public void onSeekComplete(MediaPlayer mp) {
+//                    Toast.makeText(SystemVideoPlayer.this, "拖动完成", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+
         }
     }
 
@@ -617,7 +705,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
             Toast.makeText(SystemVideoPlayer.this, "播放错误", Toast.LENGTH_SHORT).show();
-            return false;
+            return true;
         }
     }
 
