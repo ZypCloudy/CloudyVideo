@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class SystemVideoPlayer extends Activity implements View.OnClickListener {
+    private boolean isUseSystem = true;
     private static final int PROGRESS = 1;
     private static final int HIDE_MEDIACONTROLLER = 2;
     private VideoView videoView;
@@ -58,7 +59,6 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     private boolean isshowMediaController = false;
     //是否网络地址
     private boolean isNetUri;
-    private boolean isUseSystem = false;
     /**
      * 全屏
      */
@@ -136,8 +136,9 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         getData();
         initData();
         findViews();
-        setListener();
         setData();
+        setListener();
+
 
         //设置手势
         gesture();
