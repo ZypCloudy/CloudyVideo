@@ -62,7 +62,6 @@
                     android:layout_weight="1"
                     android:maxHeight="6dp"
                     android:minHeight="6dp"
-                    android:progress="20"
                     android:progressDrawable="@drawable/progress_horizontal"
                     android:thumb="@drawable/progress_thumb" />
 
@@ -107,7 +106,6 @@
                     android:layout_weight="1"
                     android:maxHeight="6dp"
                     android:minHeight="6dp"
-                    android:progress="20"
                     android:progressDrawable="@drawable/progress_horizontal"
                     android:thumb="@drawable/progress_thumb" />
 
