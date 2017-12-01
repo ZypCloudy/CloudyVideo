@@ -1,10 +1,8 @@
 package com.example.cloudy.cloudyvideo.activity;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.app.AlertDialog;
+import android.content.*;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -340,10 +338,24 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             updataVoice(currentVoice,isMute);
         } else if ( v == btnSwichPlayer ) {
             // Handle clicks for btnSwichPlayer
+            showSwichPlayerDialog();
         }
 
         handler.removeMessages(HIDE_MEDIACONTROLLER);
         handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER,4000);
+    }
+    private void showSwichPlayerDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("系统播放器提醒您");
+        builder.setMessage("当您播放视频，有声音没有画面的时候，请切换万能播放器播放");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startVitamioPlayer();
+            }
+        });
+        builder.setNegativeButton("取消",null);
+        builder.show();
     }
     /**
      * 播放上一个视频

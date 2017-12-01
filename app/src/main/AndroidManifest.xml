@@ -28,7 +28,7 @@
         </activity>
         <activity android:name=".activity.VitamioVideoPlayer"
                   android:configChanges="keyboardHidden|screenSize|orientation"
-                  android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+                  android:theme="@style/noAnimation_Theme"
         />
         <!--使用单例模式-->
         <activity android:name=".activity.MainActivity"
@@ -40,7 +40,7 @@
         <activity android:name=".activity.SystemVideoPlayer"
                   android:label="@string/player_name"
                   android:configChanges="keyboardHidden|screenSize|orientation"
-                  android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+                  android:theme="@style/noAnimation_Theme"
         >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

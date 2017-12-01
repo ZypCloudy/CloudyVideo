@@ -1,10 +1,8 @@
 package com.example.cloudy.cloudyvideo.activity;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.app.AlertDialog;
+import android.content.*;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -345,10 +343,46 @@ public class VitamioVideoPlayer extends Activity implements View.OnClickListener
             updataVoice(currentVoice,isMute);
         } else if ( v == btnSwichPlayer ) {
             // Handle clicks for btnSwichPlayer
+            showSwichPlayerDialog();
+
         }
 
         handler.removeMessages(HIDE_MEDIACONTROLLER);
         handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER,4000);
+    }
+    private void showSwichPlayerDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("万能播放器提醒您");
+        builder.setMessage("当您播放一个视频，有花屏的是，可以尝试使用系统播放器播放");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startSystemPlayer();
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        builder.show();
+    }
+    private void startSystemPlayer() {
+        if(videoView != null){
+            videoView.stopPlayback();
+        }
+
+
+        Intent intent = new Intent(this,SystemVideoPlayer.class);
+        if(mediaItems != null && mediaItems.size() > 0){
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("videolist", mediaItems);
+            intent.putExtras(bundle);
+            intent.putExtra("position", position);
+
+        }else if(uri != null){
+            intent.setData(uri);
+        }
+        startActivity(intent);
+
+        finish();//关闭页面
     }
     /**
      * 播放上一个视频
@@ -712,36 +746,23 @@ public class VitamioVideoPlayer extends Activity implements View.OnClickListener
         public boolean onError(MediaPlayer mp, int what, int extra) {
 //            Toast.makeText(SystemVideoPlayer.this, "播放出错了哦", Toast.LENGTH_SHORT).show();
             //1.播放的视频格式不支持--跳转到万能播放器继续播放
-            startVitamioPlayer();
+            showErrorDialog();
             //2.播放网络视频的时候，网络中断---1.如果网络确实断了，可以提示用于网络断了；2.网络断断续续的，重新播放
             //3.播放的时候本地文件中间有空白---下载做完成
             return true;
         }
     }
-    /**
-     * a,把数据按照原样传入VtaimoVideoPlayer播放器
-     * b,关闭系统播放器
-     */
-    private void startVitamioPlayer() {
-
-        if(videoView != null){
-            videoView.stopPlayback();
-        }
-
-//        Intent intent = new Intent(this,VitamioVideoPlayer.class);
-//        if(mediaItems != null && mediaItems.size() > 0){
-//
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("videolist", mediaItems);
-//            intent.putExtras(bundle);
-//            intent.putExtra("position", position);
-//
-//        }else if(uri != null){
-//            intent.setData(uri);
-//        }
-//        startActivity(intent);
-//
-//        finish();//关闭页面
+    private void showErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示");
+        builder.setMessage("抱歉，无法播放该视频！！");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.show();
     }
     class MyOnCompletionListener implements MediaPlayer.OnCompletionListener {
 

@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "C:\\AndroidStudioProjects\\MobilePlayer2\\vitamio\\build\\intermediates\\res\\merged\\release\\drawable-ldpi-v4\\ic_launcher.png",
+        "source": "C:\\AndroidStudioProjects\\MobilePlayer2\\vitamio\\res\\drawable-ldpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\AndroidStudioProjects\\MobilePlayerTest\\vitamio\\build\\intermediates\\res\\merged\\release\\drawable-ldpi-v4\\ic_launcher.png",
+        "source": "C:\\AndroidStudioProjects\\MobilePlayerTest\\vitamio\\res\\drawable-ldpi\\ic_launcher.png"
+    },
+    {
+        "merged": "E:\\Code\\Android\\CloudyVideo\\vitamio\\build\\intermediates\\res\\merged\\release\\drawable-ldpi-v4\\ic_launcher.png",
+        "source": "E:\\Code\\Android\\CloudyVideo\\vitamio\\res\\drawable-ldpi\\ic_launcher.png"
+    }
+]

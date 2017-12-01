@@ -21,14 +21,13 @@
         <item name="android:layout_weight">1</item>
     </style>
 
-
+    <!--屏蔽两个activity之间切换动画-->
     <style name="noAnimation_Theme" parent="android:Theme">
             <item name="android:windowAnimationStyle">@style/noAnimation</item>
             <item name="android:windowNoTitle">true</item>
             <item name="android:windowFullscreen">true</item>
             <item name="android:windowContentOverlay">@null</item>
     </style>
-
     <style name="noAnimation">
             <item name="android:activityOpenEnterAnimation">@null</item>
             <item name="android:activityOpenExitAnimation">@null</item>
