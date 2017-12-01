@@ -6,31 +6,35 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.*;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-
 import android.widget.*;
 import com.example.cloudy.cloudyvideo.R;
 import com.example.cloudy.cloudyvideo.domain.MediaItem;
 import com.example.cloudy.cloudyvideo.utils.LogUtil;
 import com.example.cloudy.cloudyvideo.utils.Utils;
-import com.example.cloudy.cloudyvideo.view.VideoView;
+import com.example.cloudy.cloudyvideo.view.VitamioVideoView;
+import io.vov.vitamio.MediaPlayer;
+import io.vov.vitamio.Vitamio;
+import io.vov.vitamio.widget.VideoView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class SystemVideoPlayer extends Activity implements View.OnClickListener {
+public class VitamioVideoPlayer extends Activity implements View.OnClickListener {
     private boolean isUseSystem = true;
     private static final int PROGRESS = 1;
     private static final int HIDE_MEDIACONTROLLER = 2;
-    private VideoView videoView;
+    private VitamioVideoView videoView;
     private LinearLayout llTop;
     private TextView tvName;
     private ImageView ivBattery;
@@ -213,7 +217,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             isNetUri = utils.isNetUri(uri.toString());
             videoView.setVideoURI(uri);
         }else{
-            Toast.makeText(SystemVideoPlayer.this, "没有传递数据", Toast.LENGTH_SHORT).show();
+            Toast.makeText(VitamioVideoPlayer.this, "没有传递数据", Toast.LENGTH_SHORT).show();
         }
         //设置按钮状态
         setButtonState();
@@ -278,8 +282,9 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
     }
 
     private void findViews() {
-        setContentView(R.layout.system_video_player);
-        videoView = (VideoView) findViewById(R.id.videoview);
+        Vitamio.isInitialized(this);
+        setContentView(R.layout.vitamio_video_player);
+        videoView = (VitamioVideoView) findViewById(R.id.videoview);
         llTop = (LinearLayout)findViewById( R.id.ll_top );
         tvName = (TextView)findViewById( R.id.tv_name );
         ivBattery = (ImageView)findViewById( R.id.iv_battery );
@@ -495,7 +500,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             switch (msg.what){
                 case SHOW_SPEED://显示网速
                     //1.得到网络速度
-                    String netSpeed = utils.getNetSpeed(SystemVideoPlayer.this);
+                    String netSpeed = utils.getNetSpeed(VitamioVideoPlayer.this);
 
                     //显示网络速
                     tv_laoding_netspeed.setText("玩命加载中..."+ netSpeed);
@@ -511,7 +516,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
                     break;
                 case PROGRESS:
                     //1.得到当前的视频播放进度
-                    int currentPosition = videoView.getCurrentPosition();
+                    int currentPosition = (int) videoView.getCurrentPosition();
                     //2.SeekBar.setProgress(当前进度);
                     seekbarVideo.setProgress(currentPosition);
                     //更新文本播放进度
@@ -676,7 +681,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             videoHeight = mp.getVideoHeight();
             videoView.start();//开始播放
             //1.视频的总时长，关联总长度
-            int duration =  videoView.getDuration();
+            int duration = (int) videoView.getDuration();
             seekbarVideo.setMax(duration);
             tvDuration.setText(utils.stringForTime(duration));
 
@@ -723,20 +728,20 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             videoView.stopPlayback();
         }
 
-        Intent intent = new Intent(this,VitamioVideoPlayer.class);
-        if(mediaItems != null && mediaItems.size() > 0){
-
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("videolist", mediaItems);
-            intent.putExtras(bundle);
-            intent.putExtra("position", position);
-
-        }else if(uri != null){
-            intent.setData(uri);
-        }
-        startActivity(intent);
-
-        finish();//关闭页面
+//        Intent intent = new Intent(this,VitamioVideoPlayer.class);
+//        if(mediaItems != null && mediaItems.size() > 0){
+//
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("videolist", mediaItems);
+//            intent.putExtras(bundle);
+//            intent.putExtra("position", position);
+//
+//        }else if(uri != null){
+//            intent.setData(uri);
+//        }
+//        startActivity(intent);
+//
+//        finish();//关闭页面
     }
     class MyOnCompletionListener implements MediaPlayer.OnCompletionListener {
 
