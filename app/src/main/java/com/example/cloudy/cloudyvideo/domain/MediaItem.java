@@ -2,7 +2,8 @@ package com.example.cloudy.cloudyvideo.domain;
 
 import java.io.Serializable;
 
-public class MediaItem implements Serializable{
+public class MediaItem implements Serializable {
+
     private String name;
 
     private long duration;
@@ -13,25 +14,35 @@ public class MediaItem implements Serializable{
 
     private String artist;
 
-    public String getArtist() {
-        return artist;
+    private String desc;
+
+    private String imageUrl;
+
+    public String getDesc() {
+        return desc;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
-    public String getData() {
-
-        return data;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getDuration() {
-
         return duration;
     }
 
@@ -47,13 +58,20 @@ public class MediaItem implements Serializable{
         this.size = size;
     }
 
-    public String getName() {
-        return name;
-
+    public String getData() {
+        return data;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
     @Override
@@ -64,6 +82,8 @@ public class MediaItem implements Serializable{
                 ", size=" + size +
                 ", data='" + data + '\'' +
                 ", artist='" + artist + '\'' +
+                ", desc='" + desc + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 }
