@@ -7,15 +7,27 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.example.cloudy.cloudyvideo.R;
 import com.example.cloudy.cloudyvideo.base.BasePager;
+import com.example.cloudy.cloudyvideo.utils.Constants;
 import com.example.cloudy.cloudyvideo.utils.LogUtil;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
+import java.util.List;
 
 public class RecommendPager extends BasePager {
 
-    private TextView textView;
-    private ListView listview;
-    private TextView tv_nomedia;
-    private ProgressBar pb_loading;
+    @ViewInject(R.id.listview)
+    private ListView mListview;
+
+    @ViewInject(R.id.tv_nonet)
+    private TextView mTv_nonet;
+
+    @ViewInject(R.id.pb_loading)
+    private ProgressBar mProgressBar;
 
     public RecommendPager(Context context) {
         super(context);
@@ -27,16 +39,10 @@ public class RecommendPager extends BasePager {
      */
     @Override
     public View initView() {
-        textView = new TextView(context);
-        textView.setTextSize(25);
-        textView.setTextColor(Color.BLUE);
-        textView.setGravity(Gravity.CENTER);
-//        View view = View.inflate(context, R.layout.video_pager,null);
-//        listview = (ListView) view.findViewById(R.id.listview);
-//        tv_nomedia = (TextView) view.findViewById(R.id.tv_nomedia);
-//        pb_loading = (ProgressBar) view.findViewById(R.id.pb_loading);
-//        return view;
-        return textView;
+        View view = View.inflate(context, R.layout.netvideo_pager,null);
+        //第一个参数是RecommendPager.this,第二个是布局
+        x.view().inject(this,view);
+        return view;
     }
 
 
@@ -46,6 +52,27 @@ public class RecommendPager extends BasePager {
         LogUtil.e("推荐的数据被初始化");
         //联网
         //视频内容
-        textView.setText("推荐");
+        RequestParams params = new RequestParams(Constants.NET_URL);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                LogUtil.e("联网成功==" + result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                LogUtil.e("联网失败==" + ex.getMessage());
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                LogUtil.e("onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                LogUtil.e("onFinished==");
+            }
+        });
     }
 }
