@@ -146,35 +146,34 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
 
     private void gesture() {
         //2.实例化手势识别器，并且重写双击，点击，长按
-        detector  = new GestureDetector(this,new GestureDetector.SimpleOnGestureListener(){
-
-            @Override
-            public boolean onDoubleTap(MotionEvent e) {
-//                Toast.makeText(SystemVideoPlayer.this, "我被双击了", Toast.LENGTH_SHORT).show();
-                startAndPause();
-                return super.onDoubleTap(e);
-            }
-
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-//                Toast.makeText(SystemVideoPlayer.this, "我被单击了", Toast.LENGTH_SHORT).show();
-                if(isshowMediaController){
-                    //隐藏
-                    hideMediaController();
-                    //把隐藏消息移除
-                    handler.removeMessages(HIDE_MEDIACONTROLLER);
-
-                }else{
-                    //显示
-                    showMediaController();
-                    //发消息隐藏
-                    handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER,4000);
-                }
-                return super.onSingleTapConfirmed(e);
-            }
-        });
+        detector  = new GestureDetector(this,new MySimpleOnGestureListener());
     }
+    class MySimpleOnGestureListener extends GestureDetector.SimpleOnGestureListener{
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+//                Toast.makeText(SystemVideoPlayer.this, "我被双击了", Toast.LENGTH_SHORT).show();
+            startAndPause();
+            return super.onDoubleTap(e);
+        }
 
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+//                Toast.makeText(SystemVideoPlayer.this, "我被单击了", Toast.LENGTH_SHORT).show();
+            if(isshowMediaController){
+                //隐藏
+                hideMediaController();
+                //把隐藏消息移除
+                handler.removeMessages(HIDE_MEDIACONTROLLER);
+
+            }else{
+                //显示
+                showMediaController();
+                //发消息隐藏
+                handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER,4000);
+            }
+            return super.onSingleTapConfirmed(e);
+        }
+    }
     private void startAndPause() {
         if(videoView.isPlaying()){
             videoView.pause();
