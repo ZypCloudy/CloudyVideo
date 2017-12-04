@@ -1,13 +1,15 @@
 package com.example.cloudy.cloudyvideo.pager;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.view.Gravity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.cloudy.cloudyvideo.R;
+import com.example.cloudy.cloudyvideo.activity.SystemVideoPlayer;
 import com.example.cloudy.cloudyvideo.adapter.NetVideoPagerAdapter;
 import com.example.cloudy.cloudyvideo.base.BasePager;
 import com.example.cloudy.cloudyvideo.domain.MediaItem;
@@ -21,7 +23,6 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecommendPager extends BasePager {
 
@@ -44,16 +45,32 @@ public class RecommendPager extends BasePager {
 
     /**
      * 初始化当前页面的控件，由父类调用
+     *
      * @return
      */
     @Override
     public View initView() {
-        View view = View.inflate(context, R.layout.netvideo_pager,null);
+        View view = View.inflate(context, R.layout.netvideo_pager, null);
         //第一个参数是RecommendPager.this,第二个是布局
-        x.view().inject(this,view);
+        x.view().inject(this, view);
+        mListview.setOnItemClickListener(new MyOnItemClickListener());
         return view;
     }
 
+    class MyOnItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            //3.传递列表数据-对象-序列化
+            Intent intent = new Intent(context,SystemVideoPlayer.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("videolist",mediaItems);
+            intent.putExtras(bundle);
+            intent.putExtra("position",position);
+            context.startActivity(intent);
+        }
+    }
 
     @Override
     public void initData() {
@@ -86,12 +103,13 @@ public class RecommendPager extends BasePager {
             }
         });
     }
+
     private void processData(String json) {
 
-        if(!isLoadMore){
+        if (!isLoadMore) {
             mediaItems = parseJson(json);
-//            showData();
-        }else{
+            showData();
+        } else {
             //加载更多
             //要把得到更多的数据，添加到原来的集合中
             ArrayList<MediaItem> moreDatas = parseJson(json);
@@ -102,30 +120,31 @@ public class RecommendPager extends BasePager {
 //            onLoad();
         }
     }
+
     private void showData() {
         //设置适配器
-        if(mediaItems != null && mediaItems.size() >0){
+        if (mediaItems != null && mediaItems.size() > 0) {
             //有数据
             //设置适配器
-            adapter = new NetVideoPagerAdapter(context,mediaItems);
+            adapter = new NetVideoPagerAdapter(context, mediaItems);
             mListview.setAdapter(adapter);
 //            onLoad();
             //把文本隐藏
             mTv_nonet.setVisibility(View.GONE);
-        }else{
+        } else {
             //没有数据
             //文本显示
             mTv_nonet.setVisibility(View.VISIBLE);
         }
-
-
         //ProgressBar隐藏
         mProgressBar.setVisibility(View.GONE);
     }
+
     /**
      * 解决json数据：
      * 1.用系统接口解析json数据
      * 2.使用第三方解决工具（Gson,fastjson）
+     *
      * @param json
      * @return
      */
@@ -134,13 +153,13 @@ public class RecommendPager extends BasePager {
         try {
             JSONObject jsonObject = new JSONObject(json);
             JSONArray jsonArray = jsonObject.optJSONArray("trailers");
-            if(jsonArray!= null && jsonArray.length() >0){
+            if (jsonArray != null && jsonArray.length() > 0) {
 
-                for (int i=0;i<jsonArray.length();i++){
+                for (int i = 0; i < jsonArray.length(); i++) {
 
                     JSONObject jsonObjectItem = (JSONObject) jsonArray.get(i);
 
-                    if(jsonObjectItem != null){
+                    if (jsonObjectItem != null) {
 
                         MediaItem mediaItem = new MediaItem();
 
