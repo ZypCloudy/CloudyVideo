@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.cloudy.cloudyvideo.R;
@@ -15,6 +14,7 @@ import com.example.cloudy.cloudyvideo.base.BasePager;
 import com.example.cloudy.cloudyvideo.domain.MediaItem;
 import com.example.cloudy.cloudyvideo.utils.Constants;
 import com.example.cloudy.cloudyvideo.utils.LogUtil;
+import com.example.cloudy.cloudyvideo.view.XListView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
@@ -22,12 +22,14 @@ import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class RecommendPager extends BasePager {
 
     @ViewInject(R.id.listview)
-    private ListView mListview;
+    private XListView mListview;
 
     @ViewInject(R.id.tv_nonet)
     private TextView mTv_nonet;
@@ -54,7 +56,53 @@ public class RecommendPager extends BasePager {
         //第一个参数是RecommendPager.this,第二个是布局
         x.view().inject(this, view);
         mListview.setOnItemClickListener(new MyOnItemClickListener());
+        mListview.setPullLoadEnable(true);
+        mListview.setXListViewListener(new MyIXListViewListener());
         return view;
+    }
+    class MyIXListViewListener implements XListView.IXListViewListener {
+        @Override
+        public void onRefresh() {
+            getDataFromNet();
+        }
+
+        @Override
+        public void onLoadMore() {
+
+            getMoreDataFromNet();
+        }
+    }
+    private void getMoreDataFromNet() {
+        //联网
+        //视频内容
+        RequestParams params = new RequestParams(Constants.NET_URL);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                LogUtil.e("联网成功==" + result);
+                isLoadMore = true;
+                //主线程
+                processData(result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                LogUtil.e("联网失败==" + ex.getMessage());
+                isLoadMore = false;
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                LogUtil.e("onCancelled==" + cex.getMessage());
+                isLoadMore = false;
+            }
+
+            @Override
+            public void onFinished() {
+                LogUtil.e("onFinished==");
+                isLoadMore = false;
+            }
+        });
     }
 
     class MyOnItemClickListener implements AdapterView.OnItemClickListener {
@@ -67,7 +115,7 @@ public class RecommendPager extends BasePager {
             Bundle bundle = new Bundle();
             bundle.putSerializable("videolist",mediaItems);
             intent.putExtras(bundle);
-            intent.putExtra("position",position);
+            intent.putExtra("position",position-1);
             context.startActivity(intent);
         }
     }
@@ -76,6 +124,10 @@ public class RecommendPager extends BasePager {
     public void initData() {
         super.initData();
         LogUtil.e("推荐的数据被初始化");
+        getDataFromNet();
+    }
+
+    private void getDataFromNet() {
         //联网
         //视频内容
         RequestParams params = new RequestParams(Constants.NET_URL);
@@ -116,8 +168,8 @@ public class RecommendPager extends BasePager {
             isLoadMore = false;
             mediaItems.addAll(parseJson(json));
             //刷新适配器
-//            adapter.notifyDataSetChanged();
-//            onLoad();
+            adapter.notifyDataSetChanged();
+            onLoad();
         }
     }
 
@@ -128,7 +180,7 @@ public class RecommendPager extends BasePager {
             //设置适配器
             adapter = new NetVideoPagerAdapter(context, mediaItems);
             mListview.setAdapter(adapter);
-//            onLoad();
+            onLoad();
             //把文本隐藏
             mTv_nonet.setVisibility(View.GONE);
         } else {
@@ -139,7 +191,20 @@ public class RecommendPager extends BasePager {
         //ProgressBar隐藏
         mProgressBar.setVisibility(View.GONE);
     }
-
+    private void onLoad() {
+        mListview.stopRefresh();
+        mListview.stopLoadMore();
+        mListview.setRefreshTime("更新时间:"+getSysteTime());
+    }
+    /**
+     * 得到系统时间
+     *
+     * @return
+     */
+    public String getSysteTime() {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        return format.format(new Date());
+    }
     /**
      * 解决json数据：
      * 1.用系统接口解析json数据
