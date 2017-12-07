@@ -10,7 +10,7 @@
             android:layout_height="match_parent" />
     <TextView
             android:id="@+id/tv_nomedia"
-            android:text="None"
+            android:text="none"
             android:textColor="#000"
             android:textSize="18sp"
             android:visibility="gone"

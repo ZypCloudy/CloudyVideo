@@ -7,14 +7,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.example.cloudy.cloudyvideo.R;
 import com.example.cloudy.cloudyvideo.activity.SystemVideoPlayer;
 import com.example.cloudy.cloudyvideo.adapter.VideoPagerAdapter;
@@ -24,7 +30,8 @@ import com.example.cloudy.cloudyvideo.utils.LogUtil;
 
 import java.util.ArrayList;
 
-public class DownloadPager extends BasePager {
+
+public class MusicPager extends BasePager {
 
     private ListView listview;
     private TextView tv_nomedia;
@@ -39,7 +46,7 @@ public class DownloadPager extends BasePager {
     private ArrayList<MediaItem> mediaItems;
 
 
-    public DownloadPager(Context context) {
+    public MusicPager(Context context) {
         super(context);
 
     }
@@ -51,7 +58,7 @@ public class DownloadPager extends BasePager {
             if(mediaItems != null && mediaItems.size() >0){
                 //有数据
                 //设置适配器
-                videoPagerAdapter = new VideoPagerAdapter(context,mediaItems,true);
+                videoPagerAdapter = new VideoPagerAdapter(context,mediaItems,false);
                 listview.setAdapter(videoPagerAdapter);
                 //把文本隐藏
                 tv_nomedia.setVisibility(View.GONE);
@@ -59,7 +66,7 @@ public class DownloadPager extends BasePager {
                 //没有数据
                 //文本显示
                 tv_nomedia.setVisibility(View.VISIBLE);
-                tv_nomedia.setText("没有发现视频....");
+                tv_nomedia.setText("没有发现音频....");
             }
             //ProgressBar隐藏
             pb_loading.setVisibility(View.GONE);
@@ -133,13 +140,13 @@ public class DownloadPager extends BasePager {
 //                SystemClock.sleep(2000);
                 mediaItems = new ArrayList<>();
                 ContentResolver resolver = context.getContentResolver();
-                Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 String[] objs = {
-                        MediaStore.Video.Media.DISPLAY_NAME,//视频文件在sdcard的名称
-                        MediaStore.Video.Media.DURATION,//视频总时长
-                        MediaStore.Video.Media.SIZE,//视频的文件大小
-                        MediaStore.Video.Media.DATA,//视频的绝对地址
-                        MediaStore.Video.Media.ARTIST,//歌曲的演唱者
+                        MediaStore.Audio.Media.DISPLAY_NAME,//视频文件在sdcard的名称
+                        MediaStore.Audio.Media.DURATION,//视频总时长
+                        MediaStore.Audio.Media.SIZE,//视频的文件大小
+                        MediaStore.Audio.Media.DATA,//视频的绝对地址
+                        MediaStore.Audio.Media.ARTIST,//歌曲的演唱者
 
                 };
                 Cursor cursor = resolver.query(uri, objs, null, null, null);

@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.RadioGroup;
 import com.example.cloudy.cloudyvideo.R;
 import com.example.cloudy.cloudyvideo.base.BasePager;
-import com.example.cloudy.cloudyvideo.pager.ChannelPager;
+import com.example.cloudy.cloudyvideo.pager.MusicPager;
 import com.example.cloudy.cloudyvideo.pager.MinePager;
 import com.example.cloudy.cloudyvideo.pager.RecommendPager;
 import com.example.cloudy.cloudyvideo.pager.DownloadPager;
@@ -38,7 +38,7 @@ public class MainActivity extends FragmentActivity {
 
         basePagers = new ArrayList<>();
         basePagers.add(new RecommendPager(this));//添加本地视频页面-0
-        basePagers.add(new ChannelPager(this));//添加本地音乐页面-1
+        basePagers.add(new MusicPager(this));//添加本地音乐页面-1
         basePagers.add(new DownloadPager(this));//添加网络视频页面-2
         basePagers.add(new MinePager(this));//添加网络音频页面-3
         //设置RadioGroup的监听

@@ -3,6 +3,7 @@ package com.example.cloudy.cloudyvideo.pager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
@@ -12,6 +13,7 @@ import com.example.cloudy.cloudyvideo.activity.SystemVideoPlayer;
 import com.example.cloudy.cloudyvideo.adapter.NetVideoPagerAdapter;
 import com.example.cloudy.cloudyvideo.base.BasePager;
 import com.example.cloudy.cloudyvideo.domain.MediaItem;
+import com.example.cloudy.cloudyvideo.utils.CacheUtils;
 import com.example.cloudy.cloudyvideo.utils.Constants;
 import com.example.cloudy.cloudyvideo.utils.LogUtil;
 import com.example.cloudy.cloudyvideo.view.XListView;
@@ -124,6 +126,10 @@ public class RecommendPager extends BasePager {
     public void initData() {
         super.initData();
         LogUtil.e("推荐的数据被初始化");
+        String saveJson = CacheUtils.getString(context,Constants.NET_URL);
+        if(!TextUtils.isEmpty(saveJson)){
+            processData(saveJson);
+        }
         getDataFromNet();
     }
 
@@ -135,6 +141,8 @@ public class RecommendPager extends BasePager {
             @Override
             public void onSuccess(String result) {
                 LogUtil.e("联网成功==" + result);
+                //缓存数据
+                CacheUtils.putString(context,Constants.NET_URL,result);
                 //主线程
                 processData(result);
             }
@@ -142,6 +150,8 @@ public class RecommendPager extends BasePager {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 LogUtil.e("联网失败==" + ex.getMessage());
+                isLoadMore = false;
+                showData();
             }
 
             @Override

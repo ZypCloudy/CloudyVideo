@@ -18,10 +18,11 @@ public class VideoPagerAdapter extends BaseAdapter {
     private  Context context;
     private final ArrayList<MediaItem> mediaItems;
     private Utils utils;
-
-    public VideoPagerAdapter(Context context,ArrayList<MediaItem> mediaItems){
+    private final boolean isVideo;
+    public VideoPagerAdapter(Context context,ArrayList<MediaItem> mediaItems,boolean isVideo){
         this.context = context;
         this.mediaItems = mediaItems;
+        this.isVideo = isVideo;
         utils = new Utils();
     }
 
@@ -59,6 +60,10 @@ public class VideoPagerAdapter extends BaseAdapter {
         viewHoder.tv_name.setText(mediaItem.getName());
         viewHoder.tv_size.setText(Formatter.formatFileSize(context, mediaItem.getSize()));
         viewHoder.tv_time.setText(utils.stringForTime((int) mediaItem.getDuration()));
+        if(!isVideo){
+            //音频
+            viewHoder.iv_icon.setImageResource(R.drawable.music_default_bg);
+        }
         return convertView;
     }
     static class ViewHoder{
