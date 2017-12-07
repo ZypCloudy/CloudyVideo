@@ -129,7 +129,7 @@ public class DownloadPager extends BasePager {
             public void run() {
                 super.run();
 
-                isGrantExternalRW((Activity) context);
+                isGrantExternalRW((Activity) context);   //弹权限框
 //                SystemClock.sleep(2000);
                 mediaItems = new ArrayList<>();
                 ContentResolver resolver = context.getContentResolver();

@@ -82,6 +82,10 @@
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+
+        <activity
+            android:name=".activity.MusicPlayerActivity" />
     </application>
 
 </manifest>

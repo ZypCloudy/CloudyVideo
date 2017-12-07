@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.cloudy.cloudyvideo.R;
+import com.example.cloudy.cloudyvideo.activity.MusicPlayerActivity;
 import com.example.cloudy.cloudyvideo.activity.SystemVideoPlayer;
 import com.example.cloudy.cloudyvideo.adapter.VideoPagerAdapter;
 import com.example.cloudy.cloudyvideo.base.BasePager;
@@ -92,24 +93,8 @@ public class MusicPager extends BasePager {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            MediaItem mediaItem = mediaItems.get(position);
-//            Toast.makeText(context, "mediaItem=="+mediaItem.toString(), Toast.LENGTH_SHORT).show();
-
-            //1.调起系统所有的播放-隐式意图
-//            Intent intent = new Intent();
-//            intent.setDataAndType(Uri.parse(mediaItem.getData()),"video/*");
-//            context.startActivity(intent);
-
-            //2.调用自己写的播放器-显示意图--一个播放地址
-//            Intent intent = new Intent(context,SystemVideoPlayer.class);
-//            intent.setDataAndType(Uri.parse(mediaItem.getData()),"video/*");
-//            context.startActivity(intent);
             //3.传递列表数据-对象-序列化
-            Intent intent = new Intent(context,SystemVideoPlayer.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("videolist",mediaItems);
-            intent.putExtras(bundle);
+            Intent intent = new Intent(context,MusicPlayerActivity.class);
             intent.putExtra("position",position);
             context.startActivity(intent);
         }
@@ -118,7 +103,7 @@ public class MusicPager extends BasePager {
     @Override
     public void initData() {
         super.initData();
-        LogUtil.e("本地视频的数据被初始化了。。。");
+        LogUtil.e("本地音乐的数据被初始化了。。。");
         //加载本地视频数据
         getDataFromLocal();
     }
@@ -136,7 +121,7 @@ public class MusicPager extends BasePager {
             public void run() {
                 super.run();
 
-                isGrantExternalRW((Activity) context);
+                isGrantExternalRW((Activity) context);    //弹权限框
 //                SystemClock.sleep(2000);
                 mediaItems = new ArrayList<>();
                 ContentResolver resolver = context.getContentResolver();
