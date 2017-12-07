@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.cloudy.cloudyvideo">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.cloudy.cloudyvideo">
     <!--添加读内存的权限-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!--联网权限-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--重力感应权限-->
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
 
     <!--Vitamio-->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -14,12 +17,12 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <application
-            android:name=".MyApplication"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -28,21 +31,21 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.VitamioVideoPlayer"
-                  android:configChanges="keyboardHidden|screenSize|orientation"
-                  android:theme="@style/noAnimation_Theme"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:theme="@style/noAnimation_Theme"
         />
         <!--使用单例模式-->
         <activity android:name=".activity.MainActivity"
-                  android:launchMode="singleTask"
-                  android:configChanges="keyboardHidden|screenSize|orientation"
-        />
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            />
         <!--android:screenOrientation="landscape"-->//横屏
         <!--横竖屏切换导致生命周期重新执行-->
         <activity android:name=".activity.SystemVideoPlayer"
-                  android:label="@string/player_name"
-                  android:configChanges="keyboardHidden|screenSize|orientation"
-                  android:theme="@style/noAnimation_Theme"
-        >
+            android:label="@string/player_name"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:theme="@style/noAnimation_Theme"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -51,7 +54,7 @@
 
                 <data android:scheme="rtsp" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -74,11 +77,11 @@
         </activity>
         <!-- Don't forgot InitActivity -->
         <activity
-                android:name="io.vov.vitamio.activity.InitActivity"
-                android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
-                android:launchMode="singleTop"
-                android:theme="@android:style/Theme.NoTitleBar"
-                android:windowSoftInputMode="stateAlwaysHidden" />
+            android:name="io.vov.vitamio.activity.InitActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
     </application>
 
 </manifest>

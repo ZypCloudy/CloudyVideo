@@ -3,6 +3,7 @@ package com.example.cloudy.cloudyvideo.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.*;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.widget.*;
 import com.example.cloudy.cloudyvideo.R;
 import com.example.cloudy.cloudyvideo.domain.MediaItem;
 import com.example.cloudy.cloudyvideo.utils.LogUtil;
+import com.example.cloudy.cloudyvideo.utils.ScreenRotateUtil;
 import com.example.cloudy.cloudyvideo.utils.Utils;
 import com.example.cloudy.cloudyvideo.view.VitamioVideoView;
 import io.vov.vitamio.MediaPlayer;
@@ -140,14 +142,11 @@ public class VitamioVideoPlayer extends Activity implements View.OnClickListener
         findViews();
         setData();
         setListener();
-
-
         //设置手势
         gesture();
         //设置控制面板
 //        videoView.setMediaController(new MediaController(this));
     }
-
     private void gesture() {
         //2.实例化手势识别器，并且重写双击，点击，长按
         detector  = new GestureDetector(this,new MySimpleOnGestureListener());
@@ -863,4 +862,34 @@ public class VitamioVideoPlayer extends Activity implements View.OnClickListener
                 break;
         }
     }
+    //横竖屏切换
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ScreenRotateUtil.getInstance(this).start(this);
+    }
+    //横竖屏切换
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ScreenRotateUtil.getInstance(this).stop();
+    }
+//    /**
+//     * 横竖屏切换或者输入法等事件触发时调用
+//     * 需要在清单文件中配置权限
+//     * 需要在当前Activity配置configChanges属性
+//     *
+//     * @param newConfig
+//     */
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//
+//        if (ScreenRotateUtil.getInstance(this).isLandscape()) {
+//            Toast.makeText(this, "当前为横屏", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(this, "当前为竖屏", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
 }

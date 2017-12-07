@@ -14,8 +14,6 @@ import android.provider.Settings;
 import android.util.Log;
 
 /**
- * @author Pinger
- * @since 2017/2/16 上午 11:31
  * <p>
  * 屏幕根据重力感应旋转的工具类
  * <p>
