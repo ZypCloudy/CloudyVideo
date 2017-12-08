@@ -84,8 +84,13 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
 
 
-        <activity
-            android:name=".activity.MusicPlayerActivity" />
+        <activity android:name=".activity.MusicPlayerActivity" />
+
+        <service android:name=".service.MusicPlayerService">
+            <intent-filter>
+                <action android:name="android.cloudy.action.OPRNMUSIC"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
