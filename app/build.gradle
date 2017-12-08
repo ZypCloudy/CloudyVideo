@@ -31,4 +31,7 @@ dependencies {
     compile 'org.xutils:xutils:3.5.0'
     compile files('lib/glide-3.7.0.jar')
     compile files('lib/picasso-2.5.2.jar')
+    compile files('lib/Msc.jar')
+    compile files('lib/Sunflower.jar')
+    compile 'com.google.code.gson:gson:2.3.1'
 }
