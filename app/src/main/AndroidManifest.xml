@@ -84,7 +84,8 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
 
 
-        <activity android:name=".activity.MusicPlayerActivity" />
+        <activity android:name=".activity.MusicPlayerActivity"
+            android:launchMode="singleTask"/>
 
         <service android:name=".service.MusicPlayerService">
             <intent-filter>
