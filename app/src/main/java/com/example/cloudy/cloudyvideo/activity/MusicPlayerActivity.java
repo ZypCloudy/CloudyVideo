@@ -9,10 +9,7 @@ import android.os.*;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.example.cloudy.cloudyvideo.R;
 import com.example.cloudy.cloudyvideo.domain.MediaItem;
@@ -47,7 +44,8 @@ public class MusicPlayerActivity extends Activity implements View.OnClickListene
     private IMusicPlayerService service;//服务的代理类，通过它可以调用服务的方法
     private int position;
     /**
-     * 从状态栏进入
+     * true:从状态栏进入的，不需要重新播放
+     * false:从播放列表进入的
      */
     private boolean notification;
     private Utils utils;
@@ -60,14 +58,6 @@ public class MusicPlayerActivity extends Activity implements View.OnClickListene
         findViews();
         getData();
         bindAndStartService();
-//        findViews();
-//        getData();
-//        bindAndStartService();
-//        ivIcon = (ImageView) findViewById(R.id.iv_icon);
-//        ivIcon.setBackgroundResource(R.drawable.animation_list);
-//
-//        AnimationDrawable animationDrawable = (AnimationDrawable) ivIcon.getBackground();
-//        animationDrawable.start();
     }
     private void initData() {
         utils = new Utils();
@@ -76,9 +66,6 @@ public class MusicPlayerActivity extends Activity implements View.OnClickListene
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicPlayerService.OPENAUDIO);
         registerReceiver(receiver, intentFilter);
-
-        //1.EventBus注册
-//        EventBus.getDefault().register(this);//this是当前类
     }
     /**
      * 得到数据
@@ -107,6 +94,7 @@ public class MusicPlayerActivity extends Activity implements View.OnClickListene
                     }else{
                         //从状态栏
                         showViewData();
+                        checkPlaymode();
                     }
 
                 } catch (RemoteException e) {
@@ -231,10 +219,8 @@ public class MusicPlayerActivity extends Activity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if ( v == btnAudioPlaymode ) {
-            // Handle clicks for btnAudioPlaymode
-//            setPlaymode();
+            setPlaymode();
         } else if ( v == btnAudioPre ) {
-            // Handle clicks for btnAudioPre
             if(service != null){
                 try {
                     service.pre();
@@ -260,9 +246,7 @@ public class MusicPlayerActivity extends Activity implements View.OnClickListene
                     e.printStackTrace();
                 }
             }
-            // Handle clicks for btnAudioStartPause
         } else if ( v == btnAudioNext ) {
-            // Handle clicks for btnAudioNext
             if(service != null){
                 try {
                     service.next();
@@ -271,22 +255,79 @@ public class MusicPlayerActivity extends Activity implements View.OnClickListene
                 }
             }
         } else if ( v == btnLyrc ) {
-            // Handle clicks for btnLyrc
+
         }
     }
+    private void setPlaymode() {
+        try {
+            int playmode = service.getPlayMode();
+            if(playmode==MusicPlayerService.REPEAT_NORMAL){
+                playmode = MusicPlayerService.REPEAT_SINGLE;
+            }else if(playmode == MusicPlayerService.REPEAT_SINGLE){
+                playmode = MusicPlayerService.REPEAT_ALL;
+            }else if(playmode ==MusicPlayerService.REPEAT_ALL){
+                playmode = MusicPlayerService.REPEAT_NORMAL;
+            }else{
+                playmode = MusicPlayerService.REPEAT_NORMAL;
+            }
+            //保持
+            service.setPlayMode(playmode);
+            //设置图片
+            showPlaymode();
 
-//    //3.订阅方法
-//    @Subscribe(threadMode = ThreadMode.MAIN,sticky = false,priority = 0)
-//    public void showData(MediaItem mediaItem) {
-//        showViewData();
-//        checkPlaymode();
-//    }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+    private void showPlaymode() {
+        try {
+            int playmode = service.getPlayMode();
+
+            if(playmode==MusicPlayerService.REPEAT_NORMAL){
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_normal_selector);
+                Toast.makeText(MusicPlayerActivity.this, "顺序播放", Toast.LENGTH_SHORT).show();
+            }else if(playmode == MusicPlayerService.REPEAT_SINGLE){
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_single_selector);
+                Toast.makeText(MusicPlayerActivity.this, "单曲循环", Toast.LENGTH_SHORT).show();
+            }else if(playmode ==MusicPlayerService.REPEAT_ALL){
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_all_selector);
+                Toast.makeText(MusicPlayerActivity.this, "全部循环", Toast.LENGTH_SHORT).show();
+            }else{
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_normal_selector);
+                Toast.makeText(MusicPlayerActivity.this, "顺序播放", Toast.LENGTH_SHORT).show();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+    /**
+     * 校验状态
+     */
+    private void checkPlaymode() {
+        try {
+            int playmode = service.getPlayMode();
+
+            if(playmode==MusicPlayerService.REPEAT_NORMAL){
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_normal_selector);
+            }else if(playmode == MusicPlayerService.REPEAT_SINGLE){
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_single_selector);
+            }else if(playmode ==MusicPlayerService.REPEAT_ALL){
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_all_selector);
+            }else{
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_normal_selector);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
     class MyReceiver extends BroadcastReceiver{
 
         @Override
         public void onReceive(Context context, Intent intent) {
             showViewData();
-//            showData(null);
+            checkPlaymode();
         }
     }
     @Override
@@ -298,10 +339,6 @@ public class MusicPlayerActivity extends Activity implements View.OnClickListene
             unregisterReceiver(receiver);
             receiver = null;
         }
-
-        //2.EventBus取消注册
-//        EventBus.getDefault().unregister(this);
-
         //解绑服务
         if(con != null){
             unbindService(con);

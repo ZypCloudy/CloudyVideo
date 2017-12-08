@@ -279,7 +279,6 @@ public class MusicPlayerService extends Service {
         public void onPrepared(MediaPlayer mp) {
 //            通知Activity来获取信息--广播
             notifyChange(OPENAUDIO);
-//            EventBus.getDefault().post(mediaItem);
             start();
         }
     }
