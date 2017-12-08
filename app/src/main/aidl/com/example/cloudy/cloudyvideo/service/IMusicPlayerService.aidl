@@ -90,4 +90,8 @@ interface IMusicPlayerService {
           拖动音频
          */
          void seekTo(int position);
+         /**
+         * 音乐播放器顶部的效果
+         */
+         int getAudioSessionId();
 }
