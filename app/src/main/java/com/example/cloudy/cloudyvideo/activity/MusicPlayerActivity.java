@@ -2,31 +2,23 @@ package com.example.cloudy.cloudyvideo.activity;
 
 import android.app.Activity;
 import android.content.*;
-import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
-import android.media.audiofx.Visualizer;
-import android.net.Uri;
 import android.os.*;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.*;
 
 import com.example.cloudy.cloudyvideo.R;
-import com.example.cloudy.cloudyvideo.domain.MediaItem;
 import com.example.cloudy.cloudyvideo.service.IMusicPlayerService;
 import com.example.cloudy.cloudyvideo.service.MusicPlayerService;
-import com.example.cloudy.cloudyvideo.utils.LogUtil;
 import com.example.cloudy.cloudyvideo.utils.LyricUtils;
 import com.example.cloudy.cloudyvideo.utils.Utils;
-import com.example.cloudy.cloudyvideo.view.BaseVisualizerView;
 import com.example.cloudy.cloudyvideo.view.ShowLyricView;
 
 import java.io.File;
 import java.util.ArrayList;
 
 public class MusicPlayerActivity extends Activity implements View.OnClickListener {
-    private BaseVisualizerView baseVisualizerView;
     private ImageView ivIcon;
     private TextView tvArtist;
     private TextView tvName;
@@ -195,7 +187,6 @@ public class MusicPlayerActivity extends Activity implements View.OnClickListene
         ivIcon.setBackgroundResource(R.drawable.animation_list);
         AnimationDrawable animationDrawable = (AnimationDrawable) ivIcon.getBackground();
         animationDrawable.start();
-        baseVisualizerView = (BaseVisualizerView) findViewById(R.id.baseVisualizerView);
         tvArtist = (TextView) findViewById(R.id.tv_artist);
         tvName = (TextView) findViewById(R.id.tv_name);
         tvTime = (TextView) findViewById(R.id.tv_time);
@@ -366,28 +357,7 @@ public class MusicPlayerActivity extends Activity implements View.OnClickListene
             showLyric();
             showViewData();
             checkPlaymode();
-            setupVisualizerFxAndUi();
         }
-    }
-
-    private Visualizer mVisualizer;
-
-    /**
-     * 生成一个VisualizerView对象，使音频频谱的波段能够反映到 VisualizerView上
-     */
-    private void setupVisualizerFxAndUi() {
-        try {
-            int audioSessionid = service.getAudioSessionId();
-            mVisualizer = new Visualizer(audioSessionid);
-            // 参数内必须是2的位数
-            mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-            // 设置允许波形表示，并且捕获它
-            baseVisualizerView.setVisualizer(mVisualizer);
-            mVisualizer.setEnabled(true);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
     }
 
     private void showLyric() {
@@ -429,13 +399,5 @@ public class MusicPlayerActivity extends Activity implements View.OnClickListene
             con = null;
         }
         super.onDestroy();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mVisualizer != null) {
-            mVisualizer.release();
-        }
     }
 }
