@@ -2,12 +2,14 @@ package com.example.cloudy.cloudyvideo.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import com.example.cloudy.cloudyvideo.R;
 import com.example.cloudy.cloudyvideo.activity.MainActivity;
+import com.example.cloudy.cloudyvideo.utils.StatusBarUtils;
 
 public class SplashActivity extends Activity {
 
@@ -17,6 +19,7 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        StatusBarUtils.setStatusBarColor(this, Color.rgb(30, 144, 205));
         hander.postDelayed(new Runnable() {
             @Override
             public void run() {

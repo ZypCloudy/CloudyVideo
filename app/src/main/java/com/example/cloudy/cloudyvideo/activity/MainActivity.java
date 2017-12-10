@@ -1,11 +1,12 @@
 package com.example.cloudy.cloudyvideo.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
+import android.view.*;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import com.example.cloudy.cloudyvideo.R;
@@ -14,6 +15,7 @@ import com.example.cloudy.cloudyvideo.pager.MusicPager;
 import com.example.cloudy.cloudyvideo.pager.MinePager;
 import com.example.cloudy.cloudyvideo.pager.RecommendPager;
 import com.example.cloudy.cloudyvideo.pager.DownloadPager;
+import com.example.cloudy.cloudyvideo.utils.StatusBarUtils;
 
 import java.util.ArrayList;
 
@@ -37,7 +39,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rg_bottom_tag = (RadioGroup) findViewById(R.id.rg_bottom_tag);
-
+        StatusBarUtils.setStatusBarColor(this, Color.rgb(30, 144, 205));
 
         basePagers = new ArrayList<>();
         basePagers.add(new RecommendPager(this));//添加本地视频页面-0
@@ -48,7 +50,6 @@ public class MainActivity extends FragmentActivity {
         rg_bottom_tag.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
         rg_bottom_tag.check(R.id.rb_video);//默认选中首页
     }
-
     class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
 
         @Override
