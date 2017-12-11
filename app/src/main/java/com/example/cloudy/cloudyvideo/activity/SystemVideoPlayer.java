@@ -9,10 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.*;
 import android.util.DisplayMetrics;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 
 import android.widget.*;
 import com.example.cloudy.cloudyvideo.R;
@@ -99,6 +96,10 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
      */
     private AudioManager am;
     private float startY;
+    /**
+     * 调节亮度
+     */
+    private float startX;
     /**
      * 当一按下的音量
      */
@@ -626,6 +627,7 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             case MotionEvent.ACTION_DOWN://手指按下
                 //1.按下记录值
                 startY = event.getY();
+                startX = event.getX();
                 mVol = am.getStreamVolume(AudioManager.STREAM_MUSIC);
                 touchRang = Math.min(screenHeight, screenWidth);//screenHeight
                 handler.removeMessages(HIDE_MEDIACONTROLLER);
@@ -634,17 +636,31 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
             case MotionEvent.ACTION_MOVE://手指移动
                 //2.移动的记录相关值
                 float endY = event.getY();
+                float endX = event.getX();
                 float distanceY = startY - endY;
-                //改变声音 = （滑动屏幕的距离： 总距离）*音量最大值
-                float delta = (distanceY/touchRang)*maxVoice;
-                //最终声音 = 原来的 + 改变声音；
-                int voice = (int) Math.min(Math.max(mVol+delta,0),maxVoice);
-                if(delta != 0){
-                    isMute = false;
-                    updataVoice(voice,isMute);
-                }
 
-//                startY = event.getY();//不要加
+                if(endX < screenWidth/2){
+                    //左边屏幕-调节亮度
+                    final double FLING_MIN_DISTANCE = 0.5;
+                    final double FLING_MIN_VELOCITY = 0.5;
+                    if (distanceY > FLING_MIN_DISTANCE
+                            && Math.abs(distanceY) > FLING_MIN_VELOCITY) {
+                        setBrightness(20);
+                    }
+                    if (distanceY < FLING_MIN_DISTANCE
+                            && Math.abs(distanceY) > FLING_MIN_VELOCITY) {
+                        setBrightness(-20);
+                    }
+                }else {
+                    //改变声音 = （滑动屏幕的距离： 总距离）*音量最大值
+                    float delta = (distanceY/touchRang)*maxVoice;
+                    //最终声音 = 原来的 + 改变声音；
+                    int voice = (int) Math.min(Math.max(mVol+delta,0),maxVoice);
+                    if(delta != 0){
+                        isMute = false;
+                        updataVoice(voice,isMute);
+                    }
+                }
                 break;
             case MotionEvent.ACTION_UP://手指离开
                 handler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER,4000);
@@ -652,7 +668,31 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener 
         }
         return super.onTouchEvent(event);
     }
-
+    private  Vibrator vibrator;
+    /*
+     *
+     * 设置屏幕亮度 lp = 0 全暗 ，lp= -1,根据系统设置， lp = 1; 最亮
+     */
+    public void setBrightness(float brightness) {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        // if (lp.screenBrightness <= 0.1) {
+        // return;
+        // }
+        lp.screenBrightness = lp.screenBrightness + brightness / 255.0f;
+        if (lp.screenBrightness > 1) {
+            lp.screenBrightness = 1;
+            vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            long[] pattern = { 10, 200 }; // OFF/ON/OFF/ON...
+            vibrator.vibrate(pattern, -1);
+        } else if (lp.screenBrightness < 0.2) {
+            lp.screenBrightness = (float) 0.2;
+            vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            long[] pattern = { 10, 200 }; // OFF/ON/OFF/ON...
+            vibrator.vibrate(pattern, -1);
+        }
+//        Log.e(TAG, "lp.screenBrightness= " + lp.screenBrightness);
+        getWindow().setAttributes(lp);
+    }
     /**
      * 监听物理健，实现声音的调节大小
      * @param keyCode

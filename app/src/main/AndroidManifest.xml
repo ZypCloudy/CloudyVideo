@@ -10,7 +10,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!--重力感应权限-->
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
-
+    <!--震动权限-->
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <!--Vitamio-->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
