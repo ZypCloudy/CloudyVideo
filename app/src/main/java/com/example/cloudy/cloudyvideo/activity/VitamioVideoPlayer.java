@@ -437,14 +437,14 @@ public class VitamioVideoPlayer extends Activity implements View.OnClickListener
                 setEnable(false);
             }else if(mediaItems.size()==2) {
                 if(position==0){
-                    btnVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+                    btnVideoPre.setBackgroundResource(R.drawable.video_btn_pre_gray);
                     btnVideoPre.setEnabled(false);
 
                     btnVideoNext.setBackgroundResource(R.drawable.btn_video_next_selector);
                     btnVideoNext.setEnabled(true);
 
                 }else if(position==mediaItems.size()-1){
-                    btnVideoNext.setBackgroundResource(R.drawable.btn_next_gray);
+                    btnVideoNext.setBackgroundResource(R.drawable.video_btn_next_gray);
                     btnVideoNext.setEnabled(false);
 
                     btnVideoPre.setBackgroundResource(R.drawable.btn_video_pre_selector);
@@ -453,10 +453,10 @@ public class VitamioVideoPlayer extends Activity implements View.OnClickListener
                 }
             }else{
                 if(position==0){
-                    btnVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+                    btnVideoPre.setBackgroundResource(R.drawable.video_btn_pre_gray);
                     btnVideoPre.setEnabled(false);
                 }else if(position==mediaItems.size()-1){
-                    btnVideoNext.setBackgroundResource(R.drawable.btn_next_gray);
+                    btnVideoNext.setBackgroundResource(R.drawable.video_btn_next_gray);
                     btnVideoNext.setEnabled(false);
                 }else{
                     setEnable(true);
@@ -475,9 +475,9 @@ public class VitamioVideoPlayer extends Activity implements View.OnClickListener
             btnVideoNext.setEnabled(true);
         }else{
             //两个按钮设置灰色
-            btnVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+            btnVideoPre.setBackgroundResource(R.drawable.video_btn_pre_gray);
             btnVideoPre.setEnabled(false);
-            btnVideoNext.setBackgroundResource(R.drawable.btn_next_gray);
+            btnVideoNext.setBackgroundResource(R.drawable.video_btn_next_gray);
             btnVideoNext.setEnabled(false);
         }
 

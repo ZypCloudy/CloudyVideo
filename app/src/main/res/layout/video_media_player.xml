@@ -4,81 +4,84 @@
                 android:layout_height="match_parent">
 
     <LinearLayout
-            android:gravity="center_vertical"
+            android:id="@+id/ll_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#e0000000"
-            android:minHeight="34dp"
-            android:orientation="horizontal">
-        <Button
-                android:id="@+id/btn_exit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:background="@drawable/btn_exit_selector"/>
+            android:orientation="vertical">
 
-        <TextView
-                android:id="@+id/tv_name"
-                android:layout_weight="1"
-                android:layout_marginLeft="23dp"
-                android:textColor="#fff"
-                android:text="视频名称"
-                android:layout_width="wrap_content"
+        <LinearLayout
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-        />
-        <ImageView
-                android:id="@+id/iv_battery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:src="@drawable/ic_battery_60"/>
-        <TextView
-                android:id="@+id/tv_system_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:text="12:00"
-                android:textColor="#fff"/>
-        <Button
-                android:layout_marginRight="20dp"
-                android:id="@+id/btn_swich_player"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_swich_player_selector"/>
+                android:background="#e0000000"
+                android:minHeight="34dp"
+                android:orientation="horizontal">
+            <Button
+                    android:id="@+id/btn_exit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:background="@drawable/btn_exit"/>
 
-    </LinearLayout>
-    <LinearLayout
-            android:id="@+id/ll_vioce"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#e0000000"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="100dp"
-            android:layout_marginRight="100dp"
-            android:visibility="gone">
+            <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="23dp"
+                    android:textColor="#fff"
+                    android:text="视频名称"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+            />
+            <ImageView
+                    android:id="@+id/iv_battery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:src="@drawable/ic_battery_60"/>
+            <TextView
+                    android:id="@+id/tv_system_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="12:00"
+                    android:textColor="#fff"/>
+            <Button
+                    android:layout_marginRight="20dp"
+                    android:id="@+id/btn_swich_player"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_swich_player_selector"/>
 
-        <Button
-                android:id="@+id/btn_voice"
-                android:layout_width="wrap_content"
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_voice_selector"/>
+                android:background="#e0000000"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginLeft="200dp"
+                android:layout_marginRight="200dp"
+        >
 
-        <SeekBar
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:id="@+id/seekbar_voice"
-                android:layout_weight="1"
-                android:maxHeight="3dp"
-                android:minHeight="3dp"
-                android:progress="20"
-                android:thumb="@drawable/progress_thumb"
-                android:progressDrawable="@drawable/progress_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-        />
+            <Button
+                    android:id="@+id/btn_voice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_voice_selector"/>
+
+            <SeekBar
+                    android:id="@+id/seekbar_voice"
+                    android:layout_weight="1"
+                    android:maxHeight="3dp"
+                    android:minHeight="3dp"
+                    android:progress="20"
+                    android:thumb="@drawable/progress_thumb"
+                    android:progressDrawable="@drawable/progress_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+            />
+        </LinearLayout>
     </LinearLayout>
     <LinearLayout
             android:layout_alignParentBottom="true"
@@ -121,8 +124,6 @@
                 <SeekBar
                         android:id="@+id/seekbar_video"
                         android:layout_weight="1"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
                         android:maxHeight="3dp"
                         android:minHeight="3dp"
                         android:progress="20"
