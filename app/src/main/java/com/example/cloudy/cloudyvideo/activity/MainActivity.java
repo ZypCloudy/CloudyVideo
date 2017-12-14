@@ -16,6 +16,10 @@ import com.example.cloudy.cloudyvideo.pager.MinePager;
 import com.example.cloudy.cloudyvideo.pager.RecommendPager;
 import com.example.cloudy.cloudyvideo.pager.DownloadPager;
 import com.example.cloudy.cloudyvideo.utils.StatusBarUtils;
+import com.example.cloudy.cloudyvideo.view.GlideImageLoader;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.Transformer;
 
 import java.util.ArrayList;
 
@@ -49,6 +53,46 @@ public class MainActivity extends FragmentActivity {
         //设置RadioGroup的监听
         rg_bottom_tag.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
         rg_bottom_tag.check(R.id.rb_video);//默认选中首页
+
+
+        //资源文件
+        ArrayList<Integer> images = new ArrayList<>();
+        images.add(R.drawable.video_btn_next_gray);
+        images.add(R.drawable.video_btn_next_normal);
+        images.add(R.drawable.video_btn_next_pressed);
+//        Banner banner = (Banner) findViewById(R.id.banner);
+//        //设置banner样式
+//        banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE);
+//        //设置图片加载器
+//        banner.setImageLoader(new GlideImageLoader());
+//        //设置图片集合
+//        banner.setImages(images);
+//        //设置banner动画效果
+//        banner.setBannerAnimation(Transformer.DepthPage);
+//
+//        ArrayList<String> titles = new ArrayList<>();
+//        titles.add("Hello！");
+//        titles.add("World!");
+//        titles.add("Haha!");
+//
+//        //设置标题集合（当banner样式有显示title时）
+//        banner.setBannerTitles(titles);
+//        //设置自动轮播，默认为true
+//        banner.isAutoPlay(true);
+//        //设置轮播时间
+//        banner.setDelayTime(1500);
+//        //设置指示器位置（当banner模式中有指示器时）
+//        banner.setIndicatorGravity(BannerConfig.CENTER);
+//        //banner设置方法全部调用完毕时最后调用
+//        banner.start();
+
+        Banner banner = (Banner) findViewById(R.id.banner);
+        //设置图片加载器
+        banner.setImageLoader(new GlideImageLoader());
+        //设置图片集合
+        banner.setImages(images);
+        //banner设置方法全部调用完毕时最后调用
+        banner.start();
     }
     class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
 

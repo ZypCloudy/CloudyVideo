@@ -34,4 +34,5 @@ dependencies {
     compile files('lib/Msc.jar')
     compile files('lib/Sunflower.jar')
     compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.youth.banner:banner:1.4.10'  //最新版本  轮播
 }
